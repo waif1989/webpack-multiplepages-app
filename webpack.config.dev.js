@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const src = path.resolve(process.cwd(), 'src')
 const entries = {}
 const outputHtml = []
-const init = () => {
+/*const init = () => {
     glob.sync(`${src}/entry/!**!/!*.js`, {}, (er, files) => {
         if (er !== null) {
             console.log('glob error:', er)
@@ -26,7 +26,7 @@ const init = () => {
                 outputHtml.push(new HtmlWebpackPlugin(conf))
                 entries[fileEntryName] = filePath
             })
-            /*const config = {
+            /!*const config = {
                 entry: entries,
                 output: {
                     path: path.resolve(process.cwd(), 'dist'),
@@ -56,10 +56,10 @@ const init = () => {
                     port: 8081
                 }
             }
-            return config*/
+            return config*!/
         }
     })
-}
+}*/
 /*glob(`${src}/entry/!**!/!*.js`, {}, (er, files) => {
     if (er !== null) {
         console.log('glob error:', er)
@@ -102,31 +102,22 @@ const init = () => {
     // was found, then files is ["**!/!*.js"]
     // er is an error object or null.
 })*/
-/*const outputHtml = () => {
-    glob(`${src}/entry/!**!/!*.js`, {}, (er, files) => {
-        if (er !== null) {
-            console.log('glob error:', er)
-            return
-        } else {
-            const arr = []
-            files.forEach((filePath) => {
-                const p = filePath.split('entry')[1]
-                const fileEntryName = p.substring(p.indexOf('/') + 1, p.lastIndexOf('/'))
-                const conf = {
-                    template: `${src}/entry/${fileEntryName}/index.html`,
-                    filename: `${fileEntryName}/index.html`,
-                    chunksSortMode: 'dependency',
-                }
-                new HtmlWebpackPlugin(conf)
-                arr.push(new HtmlWebpackPlugin(conf))
-            })
-            return arr
-        }
-    })
-}*/
-const o = glob.sync(`${src}/entry/!**!/!*.js`)
-console.log('+++++++++++++++++++++', o)
-module.exports = {
+
+const files = glob.sync(`${src}/entry/**/*.js`)
+files.forEach((filePath) => {
+    const p = filePath.split('entry')[1]
+    const fileEntryName = p.substring(p.indexOf('/') + 1, p.lastIndexOf('/'))
+    const conf = {
+        template: `${src}/entry/${fileEntryName}/index.html`,
+        filename: `${fileEntryName}/index.html`,
+        chunksSortMode: 'dependency'
+    }
+    new HtmlWebpackPlugin(conf)
+    outputHtml.push(new HtmlWebpackPlugin(conf))
+    entries[fileEntryName] = filePath
+})
+console.log('+++++++++++++++++++++', files, outputHtml, entries)
+/*module.exports = {
     entry: {
         app: `${src}/entry/page1/index.js`
     },
@@ -161,42 +152,12 @@ module.exports = {
         },
         port: 8083
     }
-};
-/*const obj = {
-    entry: {
-        app: `${src}/entry/page1/index.js`
-    },
-    output: {
-        path: path.resolve(process.cwd(), 'dist'),
-        publicPath: process.env.NODE_ENV === 'production' ? '/assets' : '/',
-        filename: '[name].[hash:8].js'
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.html$/,
-                loader: 'html-loader'
-            }
-        ],
-    },
-    plugins:[
-        new webpack.HotModuleReplacementPlugin()
-    ].concat(outputHtml),
-    devServer: {
-        compress: true,
-        hot: true,
-        proxy: {
-            '/api': {
-                target: 'http://localhost:3000',
-                pathRewrite: {'^/api' : ''}
-            }
-        },
-        port: 8081
-    }
-}*/
+};*/
 
-/*module.exports = {
-    entry: entries,
+
+module.exports = {
+    devtool: 'source-map',
+    entry: Object.assign(entries, {}),
     output: {
         path: path.resolve(process.cwd(), 'dist'),
         publicPath: process.env.NODE_ENV === 'production' ? '/assets' : '/',
@@ -222,6 +183,6 @@ module.exports = {
                 pathRewrite: {'^/api' : ''}
             }
         },
-        port: 8081
+        port: 8083
     }
-}*/
+}
