@@ -9,7 +9,7 @@ const src = path.resolve(process.cwd(), 'src')
 const entries = {}
 const outputHtml = []
 const init = () => {
-    glob(`${src}/entry/!**!/!*.js`, {}, (er, files) => {
+    glob.sync(`${src}/entry/!**!/!*.js`, {}, (er, files) => {
         if (er !== null) {
             console.log('glob error:', er)
             return
@@ -26,7 +26,7 @@ const init = () => {
                 outputHtml.push(new HtmlWebpackPlugin(conf))
                 entries[fileEntryName] = filePath
             })
-            const config = {
+            /*const config = {
                 entry: entries,
                 output: {
                     path: path.resolve(process.cwd(), 'dist'),
@@ -56,7 +56,7 @@ const init = () => {
                     port: 8081
                 }
             }
-            return config
+            return config*/
         }
     })
 }
@@ -124,7 +124,9 @@ const init = () => {
         }
     })
 }*/
-/*module.exports = {
+const o = glob.sync(`${src}/entry/!**!/!*.js`)
+console.log('+++++++++++++++++++++', o)
+module.exports = {
     entry: {
         app: `${src}/entry/page1/index.js`
     },
@@ -142,8 +144,12 @@ const init = () => {
         ],
     },
     plugins:[
-        new webpack.HotModuleReplacementPlugin()
-    ].concat(outputHtml),
+        new webpack.HotModuleReplacementPlugin(),
+        new HtmlWebpackPlugin({
+            template: `${src}/entry/page1/index.html`,
+            filename: 'page1/index.html'
+        })
+    ],
     devServer: {
         compress: true,
         hot: true,
@@ -153,9 +159,9 @@ const init = () => {
                 pathRewrite: {'^/api' : ''}
             }
         },
-        port: 8081
+        port: 8083
     }
-};*/
+};
 /*const obj = {
     entry: {
         app: `${src}/entry/page1/index.js`
@@ -189,10 +195,8 @@ const init = () => {
     }
 }*/
 
-module.exports = {
-    entry: {
-        app: `${src}/entry/page1/index.js`
-    },
+/*module.exports = {
+    entry: entries,
     output: {
         path: path.resolve(process.cwd(), 'dist'),
         publicPath: process.env.NODE_ENV === 'production' ? '/assets' : '/',
@@ -220,4 +224,4 @@ module.exports = {
         },
         port: 8081
     }
-};
+}*/
