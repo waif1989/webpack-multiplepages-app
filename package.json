@@ -6,6 +6,7 @@
   "dependencies": {
     "express": "^4.15.3",
     "glob": "^7.1.2",
+    "jquery": "^3.2.1",
     "webpack": "^3.4.1"
   },
   "devDependencies": {

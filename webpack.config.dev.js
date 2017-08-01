@@ -43,12 +43,20 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin()
     ].concat(outputHtml),
     devServer: {
+        host: '10.254.102.234',
+        stats: {
+            cached: false,
+            colors: true
+        },
         compress: true,
         hot: true,
+        inline: true,
         proxy: {
-            '/api': {
-                target: 'http://localhost:3000',
-                pathRewrite: {'^/api' : ''}
+            '/proxyajax/*': {
+                target: 'http://t.3c.163.com',
+                pathRewrite: {'^/proxyajax': 'http://t.3c.163.com'},
+                changeOrigin: true,
+                secure: false
             }
         },
         port: 8083
