@@ -1,5 +1,7 @@
 /**
  * Created by chensiwei on 2017/7/27.
+ * process.env.CLIENT: pc || h5
+ * process.env.CLIENT: dev || pro
  */
 const webpack = require('webpack')
 const path = require('path')
@@ -8,13 +10,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const src = path.resolve(process.cwd(), 'src')
 const entries = {}
 const outputHtml = []
-const files = glob.sync(`${src}/entry/**/*.js`)
+const files = glob.sync(`${src}/entry/${process.env.CLIENT}/**/*.js`)
 files.forEach((filePath) => {
-    const p = filePath.split('entry')[1]
+    const p = filePath.split(`${process.env.CLIENT}`)[1]
     const fileEntryName = p.substring(p.indexOf('/') + 1, p.lastIndexOf('/'))
     const conf = {
-        template: `${src}/entry/${fileEntryName}/index.html`,
+        template: `${src}/entry/${process.env.CLIENT}/${fileEntryName}/index.html`,
         filename: `${fileEntryName}/index.html`,
+        // chunks: [fileEntryName, 'vendor'],
         chunks: [fileEntryName],
         chunksSortMode: 'dependency'
     }
@@ -25,29 +28,60 @@ files.forEach((filePath) => {
 
 module.exports = {
     devtool: 'source-map',
-    entry: Object.assign(entries, {}),
+    entry: Object.assign(entries, {
+        vendor: ['babel-polyfill', 'jquery']
+    }),
     output: {
         path: path.resolve(process.cwd(), 'dist'),
         publicPath: process.env.NODE_ENV === 'production' ? '/assets' : '/',
         filename: '[name].[hash:8].js'
     },
     module: {
-        loaders: [
+        noParse (content) {
+            return /jquery|vue|babel-polyfill/.test(content)
+        },
+        rules: [
             {
                 test: /\.html$/,
-                loader: 'html-loader'
+                use: {
+                    loader: 'html-loader'
+                }
+            }, {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: process.env.CLIENT === 'h5' ? {
+                        presets: ['es2015']
+                    } : {
+                        presets: ['es2015'],
+                        plugins: [
+                            require('babel-plugin-transform-es3-member-expression-literals'),
+                            [require('babel-plugin-transform-es2015-classes'), {loose: true}],
+                            require('babel-plugin-transform-es2015-object-super'),
+                            require('babel-plugin-transform-es3-property-literals')
+                        ]
+                    }
+                }
             }
-        ],
+        ]
     },
     plugins:[
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor'],
+            filename: 'vendor.[hash:8].js',
+            minChunks: Infinity,
+            minSize: 1,
+        })
     ].concat(outputHtml),
     devServer: {
-        host: '10.254.102.234',
+        host: '0.0.0.0',
         stats: {
             cached: false,
             colors: true
         },
+        disableHostCheck: true,
         compress: true,
         hot: true,
         inline: true,
@@ -59,6 +93,6 @@ module.exports = {
                 secure: false
             }
         },
-        port: 8083
+        port: process.env.CLIENT === 'h5' ? 8083 : 8084
     }
 }

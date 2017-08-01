@@ -8,4 +8,4 @@ $.ajax({
 }).done((data) => {
     console.log(data)
 })
-console.log('page1')
+console.log('pagePC5-1')

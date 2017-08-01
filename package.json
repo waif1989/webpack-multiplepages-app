@@ -14,6 +14,10 @@
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
+    "babel-plugin-transform-es2015-classes": "^6.24.1",
+    "babel-plugin-transform-es2015-object-super": "^6.24.1",
+    "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
+    "babel-plugin-transform-es3-property-literals": "^6.22.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.23.0",
@@ -22,13 +26,15 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.24.1",
     "babel-runtime": "^6.25.0",
+    "core-js": "^2.4.1",
     "cross-env": "^5.0.1",
     "html-loader": "^0.5.0",
     "html-webpack-plugin": "^2.29.0",
     "webpack-dev-server": "^2.6.1"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --config webpack.config.dev.js --inline --hot",
+    "dev-h5": "cross-env NODE_ENV=dev CLIENT=h5 webpack-dev-server --config webpack.config.dev.js --inline --hot",
+    "dev-pc": "cross-env NODE_ENV=dev CLIENT=pc webpack-dev-server --config webpack.config.dev.js --inline --hot",
     "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
