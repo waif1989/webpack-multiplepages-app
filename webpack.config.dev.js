@@ -53,7 +53,7 @@ module.exports = {
                     loader: 'babel-loader',
                     options: process.env.CLIENT === 'h5' ? {
                         presets: ['es2015']
-                    } : {
+                    } : process.env.CLIENT === 'pc' ? {
                         presets: ['es2015'],
                         plugins: [
                             require('babel-plugin-transform-es3-member-expression-literals'),
@@ -61,6 +61,8 @@ module.exports = {
                             require('babel-plugin-transform-es2015-object-super'),
                             require('babel-plugin-transform-es3-property-literals')
                         ]
+                    } : {
+                        presets: ['es2015']
                     }
                 }
             }
@@ -93,6 +95,6 @@ module.exports = {
                 secure: false
             }
         },
-        port: process.env.CLIENT === 'h5' ? 8083 : 8084
+        port: process.env.CLIENT === 'h5' ? 8083 : process.env.CLIENT === 'pc' ? 8084 : 8080
     }
 }
