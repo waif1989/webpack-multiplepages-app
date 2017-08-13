@@ -21,7 +21,7 @@ function analysisTag (tag) {
         wbr: true
     }
     var i = 0
-    var key
+    var attrName
     var res = {
         type: 'tag',
         name: '',
@@ -30,8 +30,9 @@ function analysisTag (tag) {
         children: []
     }
     tag.replace(attrRegexp, function (match) {
+        // console.log('match-------', match)
         if (i % 2) {
-            key = match     // Check odd number target item. And match this target's attruties name
+            attrName = match     // Check odd number target item. And match this target's attruties name
         } else {
             if (i === 0) {
                 // In the first target, Check this target is self-closing or not
@@ -40,12 +41,14 @@ function analysisTag (tag) {
                 }
                 res.name = match
             } else {
-                res.attrs[key] = match.replace(/['"]/g, '')  // "res.attrs" is an object inside. This will setup "attrs" object name and object key
+                res.attrs[attrName] = match.replace(/['"]/g, '')  // "res.attrs" is an object inside. This will setup "attrs" object name and object key
             }
         }
         i++
+        // console.log('res.name-------', res.name)
     })
-    return res
+    // return res
+    return createVnode(res.name, res.attrs)
 }
 function analysisHtml (html) {
     // var results = HTML.parse(tem)
@@ -64,11 +67,14 @@ function analysisHtml (html) {
         var nextstart = index + match.length         // Calculate the next string after this target's start position
         var nextChar = html.charAt(nextstart)        // Get this target's following char string
         var parent
-        console.log('tag-------', match, index, isTargetStart, nextstart, nextChar)
+        // console.log('tag-------', match, index, isTargetStart, nextstart, nextChar)
+        // targetResult = analysisTag(match)
+        // console.log('targetResult-------', targetResult)
         if (isTargetStart) {
             level++
             targetResult = analysisTag(match)
-            if (targetResult.type === 'tag' && options.components[targetResult.name]) {
+            console.log('targetResult-------', targetResult)
+            /*if (targetResult.type === 'tag' && options.components[targetResult.name]) {
                 targetResult.type = 'component'
                 inComponent = true
             }
@@ -77,6 +83,9 @@ function analysisHtml (html) {
                     type: 'text',
                     content: html.slice(nextstart, html.indexOf('<', nextstart))
                 })
+            }*/
+            if (nextChar && nextChar !== '<') {
+                targetResult.children.push(html.slice(nextstart, html.indexOf('<', nextstart)))
             }
             if (level === 0) {
                 result.push(targetResult)
@@ -87,7 +96,7 @@ function analysisHtml (html) {
             }
             arr[level] = targetResult
         }
-        if (!isTargetStart || targetResult.selfClosing) {
+        /*if (!isTargetStart || targetResult.selfClosing) {
             level--
             if (!inComponent && nextChar !== '<' && nextChar) {
                 // trailing text node
@@ -96,8 +105,14 @@ function analysisHtml (html) {
                     content: html.slice(start, html.indexOf('<', start))
                 });
             }
+        }*/
+        if (!isTargetStart) {
+            level--
+            if (nextChar && nextChar !== '<') {
+                arr[level].children.push(html.slice(nextstart, html.indexOf('<', nextstart)))
+            }
         }
     })
-    return result
+    return result[0]
 }
 module.exports = { analysisHtml }
