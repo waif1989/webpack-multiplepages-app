@@ -1,6 +1,7 @@
-/*
-* Create by ccw in 2017-08-14
-* */
+/**
+ * Created by ccw on 2017/8/11.
+ * Analysising the html string
+ */
 var createVnode = require('./create-vnode').createVnode
 
 function analysisTag (tag) {
@@ -69,16 +70,6 @@ function analysisHtml (html, options/*0ptional*/) {
         if (isTargetStart) {
             level++
             targetResult = analysisTag(match)
-            /*if (targetResult.type === 'tag' && options.components[targetResult.name]) {
-                targetResult.type = 'component'
-                inComponent = true
-            }
-            if (!targetResult.selfClosing && !inComponent && nextChar && nextChar !== '<') {
-                targetResult.children.push({
-                    type: 'text',
-                    content: html.slice(nextstart, html.indexOf('<', nextstart))
-                })
-            }*/
             if (targetResult.nodeType === 'tag' && componentsOptions.components && componentsOptions.components[targetResult.type]) {
                 targetResult.type = 'component'
                 inComponent = true
@@ -95,16 +86,6 @@ function analysisHtml (html, options/*0ptional*/) {
             }
             arr[level] = targetResult
         }
-        /*if (!isTargetStart || targetResult.selfClosing) {
-            level--
-            if (!inComponent && nextChar !== '<' && nextChar) {
-                // trailing text node
-                arr[level].children.push({
-                    type: 'text',
-                    content: html.slice(start, html.indexOf('<', start))
-                });
-            }
-        }*/
         if (!isTargetStart || targetResult.selfClosing) {
             level--
             if (!inComponent && nextChar && nextChar !== '<') {
