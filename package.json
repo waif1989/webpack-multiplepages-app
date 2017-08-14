@@ -7,7 +7,6 @@
     "express": "^4.15.3",
     "fs": "0.0.1-security",
     "glob": "^7.1.2",
-    "html-parse-stringify": "^1.0.2",
     "jquery": "^3.2.1",
     "webpack": "^3.4.1"
   },

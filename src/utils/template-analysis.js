@@ -1,8 +1,19 @@
-// var HTML = require('html-parse-stringify')
+/*
+* Create by ccw in 2017-08-14
+* */
 var createVnode = require('./create-vnode').createVnode
 
 function analysisTag (tag) {
-    var attrRegexp = /([\w-]+)|['"]{1}([^'"]*)['"]{1}/g
+    /*
+    * @param {String} tag - The html target label
+    * */
+    var attrRegexp = /([\w-]+)|['"]{1}([^'"]*)['"]{1}/g   // Test html target attributes regular expression
+    var selfClosing = false                               // Checking target is selfClosing or not
+    var targetName = ''                                    // Initializing the target name
+    var targetAttrs = {}                                   // Initializing the target attributes
+    var nodeType = 'tag'                                   // Initializing the target type
+    var i = 0                                              // Initializing the matching results position
+    var attrName = ''                                      // Initializing attributes name
     var selfClosingTags = {
         base: true,
         br: true,
@@ -20,60 +31,44 @@ function analysisTag (tag) {
         track: true,
         wbr: true
     }
-    var i = 0
-    var attrName
-    var res = {
-        type: 'tag',
-        name: '',
-        selfClosing: false,
-        attrs: {},
-        children: []
-    }
     tag.replace(attrRegexp, function (match) {
-        // console.log('match-------', match)
         if (i % 2) {
             attrName = match     // Check odd number target item. And match this target's attruties name
         } else {
             if (i === 0) {
                 // In the first target, Check this target is self-closing or not
                 if (selfClosingTags[match] || tag.charAt(tag.length - 2) === '/') {
-                    res.selfClosing = true
+                    selfClosing = true
                 }
-                res.name = match
+                targetName = match
             } else {
-                res.attrs[attrName] = match.replace(/['"]/g, '')  // "res.attrs" is an object inside. This will setup "attrs" object name and object key
+                targetAttrs[attrName] =  match.replace(/['"]/g, '')  // "res.attrs" is an object inside. This will setup "attrs" object name and object key
             }
         }
         i++
-        // console.log('res.name-------', res.name)
     })
-    // return res
-    return createVnode(res.name, res.attrs)
+    return createVnode(targetName, targetAttrs, selfClosing, nodeType)
 }
-function analysisHtml (html) {
-    // var results = HTML.parse(tem)
-    // return results
-    console.log('htmlstring-------', html)
-    var tagRegexp = /<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g
-    var result = []
-    var arr = []
-    var targetResult
-    var level = -1
-    var inComponent = false
-    var options = {}
-    options.components = {}
+function analysisHtml (html, options/*0ptional*/) {
+    /*
+    * @param {String} html - The html string
+    * @param {Object} options - {components: {customize_components_name: customize_components_value}}
+    * */
+    var tagRegexp = /<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g     // Testing html target regular expression
+    var result = []                                                 // The Data structure of virtual dom tree, We get the first value. Because we must define the root element of html template
+    var arr = []                                                    // Saving the children tree of virtual dom tree in the data structure
+    var targetResult                                                // Saving the results of the return of analysisTag function
+    var level = -1                                                  // Marking the virtual dom tree level position
+    var inComponent = false                                        // Checking the target is real target or customize target
+    var componentsOptions = options || {}                           // Marking the customized components options
     html.replace(tagRegexp, function (match, index) {
-        var isTargetStart = match.charAt(1) !== '/'  // Judge this target is end or just start
-        var nextstart = index + match.length         // Calculate the next string after this target's start position
-        var nextChar = html.charAt(nextstart)        // Get this target's following char string
-        var parent
-        // console.log('tag-------', match, index, isTargetStart, nextstart, nextChar)
-        // targetResult = analysisTag(match)
-        // console.log('targetResult-------', targetResult)
+        var isTargetStart = match.charAt(1) !== '/'                 // Judging the target is end or just start
+        var nextstart = index + match.length                        // Calculating the next string after this target's start position
+        var nextChar = html.charAt(nextstart)                       // Getting this target's following char string
+        var parent = {}                                             // Defining each virtual dom trees's parent node
         if (isTargetStart) {
             level++
             targetResult = analysisTag(match)
-            console.log('targetResult-------', targetResult)
             /*if (targetResult.type === 'tag' && options.components[targetResult.name]) {
                 targetResult.type = 'component'
                 inComponent = true
@@ -84,7 +79,11 @@ function analysisHtml (html) {
                     content: html.slice(nextstart, html.indexOf('<', nextstart))
                 })
             }*/
-            if (nextChar && nextChar !== '<') {
+            if (targetResult.nodeType === 'tag' && componentsOptions.components && componentsOptions.components[targetResult.type]) {
+                targetResult.type = 'component'
+                inComponent = true
+            }
+            if (!targetResult.selfClosing && !inComponent && nextChar && nextChar !== '<') {
                 targetResult.children.push(html.slice(nextstart, html.indexOf('<', nextstart)))
             }
             if (level === 0) {
@@ -106,9 +105,9 @@ function analysisHtml (html) {
                 });
             }
         }*/
-        if (!isTargetStart) {
+        if (!isTargetStart || targetResult.selfClosing) {
             level--
-            if (nextChar && nextChar !== '<') {
+            if (!inComponent && nextChar && nextChar !== '<') {
                 arr[level].children.push(html.slice(nextstart, html.indexOf('<', nextstart)))
             }
         }
