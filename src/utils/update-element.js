@@ -11,16 +11,21 @@ function updateElement (parent, newNode, oldNode, index = 0) {
         parent.appendChild(
             createRealnode(newNode)
         )
+        return newNode
     } else if (!newNode) {
         parent.removeChild(
             parent.childNodes[index]
         )
+        return parent
     } else if (isChange(newNode, oldNode)) {
+        console.log('isChange')
         parent.replaceChild(
             createRealnode(newNode),
             parent.childNodes[index]
         )
+        return newNode
     } else if (newNode.type) {
+        console.log('newNode.type')
         const newLength = newNode.children.length
         const oldLength = oldNode.children.length
         for (var i = 0; i < newLength || i < oldLength; i++) {

@@ -6,18 +6,28 @@ import { createRealnode } from '../../../utils/create-realnode'
 import { analysisHtml } from '../../../utils/template-analysis'
 import { updateElement } from '../../../utils/update-element'
 import tem from './template.html'
-const results = analysisHtml(tem)
-console.log('results---vdom-----', results)
-var parent = document.getElementById('app')
 function update (event) {
-    console.log('============', event.target.value)
-    console.log('------------', parent.innerHTML)
-    const newVnode = document.getElementById('app').innerHTML
-    oldVnode = updateElement(parent, oldVnode, newVnode)
+    const parent = document.getElementById('app')
+    const newVnode = analysisHtml(tem, {
+        data: {
+            name: event.target.value
+        }
+    })
+    console.log('oldVnode============', oldVnode)
+    console.log('newVnode------------', newVnode)
+    oldVnode = updateElement(parent, newVnode, oldVnode)
 }
 
-let oldVnode = parent
-oldVnode = updateElement(oldVnode, results)
+const newVnode = analysisHtml(tem, {
+    data: {
+        name: ''
+    }
+})
+console.log('results---vdom-----', newVnode)
+let oldVnode = document.getElementById('app')
+
+oldVnode = updateElement(oldVnode, newVnode)
+console.log('oldVnode-----', oldVnode)
 window.update = update
 
 // const vdom = createVnode('ul', {'class': 'list'}, createVnode('li', {}, 'item1'), createVnode('li', {}, 'item2'))
