@@ -95,4 +95,4 @@ function analysisHtml (html, options/*0ptional*/) {
     })
     return result[0]
 }
-module.exports = { analysisHtml }
+module.exports = { analysisHtml, analysisTag }
