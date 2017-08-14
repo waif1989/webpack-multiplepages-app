@@ -20,6 +20,9 @@ function createRealnode (node) {
                 break
         }
     }
+    for (var k in node.functionProps) {
+        $el.setAttribute('on' + k, node.functionProps[k])
+    }
     node.children
         .map(createRealnode)
         .forEach($el.appendChild.bind($el))

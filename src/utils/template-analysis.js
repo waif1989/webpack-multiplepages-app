@@ -9,9 +9,11 @@ function analysisTag (tag) {
     * @param {String} tag - The html target label
     * */
     var attrRegexp = /([\w-]+)|['"]{1}([^'"]*)['"]{1}/g   // Test html target attributes regular expression
+    var functionRegexp = /^cv-(?:[a-zA-Z]+)/g
     var selfClosing = false                               // Checking target is selfClosing or not
     var targetName = ''                                    // Initializing the target name
     var targetAttrs = {}                                   // Initializing the target attributes
+    var targetFunction = {}
     var nodeType = 'tag'                                   // Initializing the target type
     var i = 0                                              // Initializing the matching results position
     var attrName = ''                                      // Initializing attributes name
@@ -43,12 +45,16 @@ function analysisTag (tag) {
                 }
                 targetName = match
             } else {
-                targetAttrs[attrName] =  match.replace(/['"]/g, '')  // "res.attrs" is an object inside. This will setup "attrs" object name and object key
+                if (functionRegexp.test(attrName)) {
+                    targetFunction[attrName.replace(/cv-/g, '')] = match.replace(/['"]/g, '')
+                } else {
+                    targetAttrs[attrName] =  match.replace(/['"]/g, '')  // "res.attrs" is an object inside. This will setup "attrs" object name and object key
+                }
             }
         }
         i++
     })
-    return createVnode(targetName, targetAttrs, selfClosing, nodeType)
+    return createVnode(targetName, targetAttrs, targetFunction, selfClosing, nodeType)
 }
 function analysisHtml (html, options/*0ptional*/) {
     /*
