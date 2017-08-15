@@ -7,7 +7,6 @@ import { analysisHtml } from '../../../utils/template-analysis'
 import { updateElement } from '../../../utils/update-element'
 import tem from './template.html'
 function update (event) {
-    const parent = document.getElementById('app')
     const newVnode = analysisHtml(tem, {
         data: {
             name: event.target.value
@@ -15,7 +14,7 @@ function update (event) {
     })
     console.log('oldVnode============', oldVnode)
     console.log('newVnode------------', newVnode)
-    oldVnode = updateElement(parent, newVnode, oldVnode)
+    oldVnode = updateElement(oldVnode, newVnode)
 }
 
 const newVnode = analysisHtml(tem, {

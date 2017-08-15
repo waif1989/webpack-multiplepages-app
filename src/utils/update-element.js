@@ -4,9 +4,23 @@
  */
 var createRealnode = require('./create-realnode').createRealnode
 function isChange (node1, node2) {
-    return typeof node1 !== typeof node2 || typeof node1 === 'string' && node1 !== node2 || node1.type !== node2.type
+    return JSON.stringify(node1) !== JSON.stringify(node2)
 }
-function updateElement (parent, newNode, oldNode, index = 0) {
+function isElement (obj) {
+    try {
+        //Using W3 DOM2 (works for FF, Opera and Chrom)
+        return obj instanceof HTMLElement
+    }
+    catch (e) {
+        //Browsers not supporting W3 DOM2 don't have HTMLElement and
+        //an exception is thrown and we end up here. Testing some
+        //properties that all elements have. (works on IE7)
+        return (typeof obj === 'object') &&
+            (obj.nodeType === 1) && (typeof obj.style === 'object') &&
+            (typeof obj.ownerDocument === 'object')
+    }
+}
+/*function updateElement (parent, newNode, oldNode, index = 0) {
     if (!oldNode) {
         parent.appendChild(
             createRealnode(newNode)
@@ -37,6 +51,20 @@ function updateElement (parent, newNode, oldNode, index = 0) {
             )
         }
     }
+}*/
+function updateElement (oldNode, newNode) {
+    if (isElement(oldNode)) {
+        oldNode.appendChild(
+            createRealnode(newNode)
+        )
+    } else if (!isElement(oldNode) && isElement(newNode)) {
+        while (newNode.firstChild) {
+            newNode.removeChild(newNode.firstChild)
+        }
+    } else if (isChange(oldNode, newNode)) {
+        console.log('chrage')
+    }
+    return newNode
 }
 
 module.exports = { updateElement }
