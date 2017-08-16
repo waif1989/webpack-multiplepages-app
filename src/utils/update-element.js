@@ -20,6 +20,43 @@ function isElement (obj) {
             (typeof obj.ownerDocument === 'object')
     }
 }
+function diff (oldNode, newNode) {
+    var isDiff = false
+    if (typeof oldNode === 'string') {
+        if (oldNode !== newNode) {
+            isDiff = true
+        }
+    } else {
+        var len = oldNode.children.length || 0
+        for (var i in oldNode) {
+            if (Array.isArray(oldNode[i])) {
+                for (var x = 0; x < len; x++) {
+                    diff(oldNode[i][x], newNode[i][x])
+                }
+            } else if (typeof oldNode[i] === 'object') {
+                for (var k in oldNode[i]) {
+                    if (oldNode[i][k] !== newNode[i][k]) {
+                        isDiff = true
+                        document.getElementById('app').replaceChild(
+                            createRealnode(newNode),
+                            createRealnode(oldNode)
+                        )
+                        return
+                    }
+                }
+            } else {
+                if (oldNode[i] !== newNode[i]) {
+                    isDiff = true
+                    document.getElementById('app').replaceChild(
+                        createRealnode(newNode),
+                        createRealnode(oldNode)
+                    )
+                    return
+                }
+            }
+        }
+    }
+}
 /*function updateElement (parent, newNode, oldNode, index = 0) {
     if (!oldNode) {
         parent.appendChild(
@@ -61,8 +98,9 @@ function updateElement (oldNode, newNode) {
         while (newNode.firstChild) {
             newNode.removeChild(newNode.firstChild)
         }
-    } else if (isChange(oldNode, newNode)) {
-        console.log('chrage')
+    } else {
+        var a = diff(oldNode, newNode)
+        console.log('a----------------', a)
     }
     return newNode
 }
