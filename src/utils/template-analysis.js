@@ -9,7 +9,7 @@ function analysisTag (tag) {
     * @param {String} tag - The html tag label
     * */
     var attrRegexp = /([\w-]+)|['"]{1}([^'"]*)['"]{1}/g   // Testing html tag attributes regular expression
-    var functionRegexp = /^cv-(?:[a-zA-Z]+)/g             // Testing html tag function bind
+    var functionRegexp = /^vf-(?:[a-zA-Z]+)/g             // Testing html tag function bind
     var selfClosing = false                               // Checking tag is selfClosing or not
     var tagName = ''                                       // Initializing the tag name
     var tagAttrs = {}                                      // Initializing the tag attributes
@@ -46,7 +46,7 @@ function analysisTag (tag) {
                 tagName = match
             } else {
                 if (functionRegexp.test(attrName)) {
-                    tagFunction[attrName.replace(/cv-/g, '')] = match.replace(/['"]/g, '')
+                    tagFunction[attrName.replace(/vf-/g, '')] = match.replace(/['"]/g, '')
                 } else {
                     tagAttrs[attrName] =  match.replace(/['"]/g, '')  // This will setup "attrs" object name and object key
                 }

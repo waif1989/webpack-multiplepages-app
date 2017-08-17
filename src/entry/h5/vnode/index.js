@@ -12,8 +12,8 @@ function update (event) {
             name: event.target.value
         }
     })
-    console.log('oldVnode============', oldVnode)
-    console.log('newVnode------------', newVnode)
+    console.log('updata oldVnode============', oldVnode)
+    console.log('updata newVnode------------', newVnode)
     oldVnode = updateElement(oldVnode, newVnode)
 }
 
@@ -22,14 +22,14 @@ const newVnode = analysisHtml(tem, {
         name: ''
     }
 })
-console.log('results---vdom-----', newVnode)
-let oldVnode = document.getElementById('app')
 
+/*const vdom = createVnode('ul', {'class': 'list'}, {'click': 'updata'}, false, 'tag', createVnode('li', {}, {}, false, 'tag', 'item1'),  createVnode('li', {}, {}, false, 'tag', 'item2'))
+app.appendChild(createRealnode(vdom))*/
+let oldVnode = document.getElementById('app')
 oldVnode = updateElement(oldVnode, newVnode)
-console.log('oldVnode-----', oldVnode)
+console.log('init oldVnode============', oldVnode)
+console.log('init newVnode------------', newVnode)
 window.update = update
 
-// const vdom = createVnode('ul', {'class': 'list'}, createVnode('li', {}, 'item1'), createVnode('li', {}, 'item2'))
-// console.log('vdom-----', vdom)
-// app.appendChild(createRealnode(vdom))
+
 
