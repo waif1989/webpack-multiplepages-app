@@ -4,7 +4,8 @@
  */
 var createRealnode = require('./create-realnode').createRealnode
 function isChange (node1, node2) {
-    return JSON.stringify(node1) !== JSON.stringify(node2)
+    // return JSON.stringify(node1) !== JSON.stringify(node2)
+    return typeof node1 !== typeof node2 || typeof node1 === 'string' && node1 !== node2 || node1.type !== node2.type
 }
 function isElement (obj) {
     try {
@@ -20,20 +21,55 @@ function isElement (obj) {
             (typeof obj.ownerDocument === 'object')
     }
 }
-function diff (oldNode, newNode) {
-    var isDiff = false
-    if (typeof oldNode === 'string') {
+function diff (oldNode, newNode, parent, level) {
+    // var isDiff = false
+    if (newNode.type) {
+        var newLength = newNode.children.length
+        var oldLength = oldNode.children.length
+        for (var x = 0; x < newLength || x < oldLength; x++) {
+            diff(
+                oldNode.children[x],
+                newNode.children[x],
+                parent.childNodes[level],
+                x
+            )
+        }
+    } else if (isChange(newNode, oldNode)) {
+        parent.replaceChild(
+            createRealnode(newNode),
+            parent.childNodes[level]
+        )
+    }
+    /*if (typeof oldNode === 'string') {
         if (oldNode !== newNode) {
-            isDiff = true
+            // isDiff = true
+            console.log('index--', index)
+            _parent.replaceChild(
+                createRealnode(newNode),
+                _parent.childNodes[index]
+            )
         }
     } else {
-        var len = oldNode.children.length || 0
         for (var i in oldNode) {
             if (Array.isArray(oldNode[i])) {
-                for (var x = 0; x < len; x++) {
-                    diff(oldNode[i][x], newNode[i][x])
+                /!*if (oldNode[i].length === newNode[i].length) {
+                    var len = oldNode.children.length
+                    index++
+                    for (var x = 0; x < len; x++) {
+                        diff(oldNode[i][x], newNode[i][x], _parent.childNodes[x], x)
+                    }
+                }*!/
+                var newLength = newNode.children.length
+                var oldLength = oldNode.children.length
+                for (var x = 0; x < newLength || x < oldLength; x++) {
+                    diff(
+                        oldNode.children[x],
+                        newNode.children[x],
+                        parent.childNodes[x],
+                        i
+                    )
                 }
-            } else if (typeof oldNode[i] === 'object') {
+            }/!* else if (typeof oldNode[i] === 'object') {
                 for (var k in oldNode[i]) {
                     if (oldNode[i][k] !== newNode[i][k]) {
                         isDiff = true
@@ -53,9 +89,9 @@ function diff (oldNode, newNode) {
                     )
                     return
                 }
-            }
+            }*!/
         }
-    }
+    }*/
 }
 /*function updateElement (parent, newNode, oldNode, index = 0) {
     if (!oldNode) {
@@ -99,7 +135,7 @@ function updateElement (oldNode, newNode) {
             newNode.removeChild(newNode.firstChild)
         }
     } else {
-        var a = diff(oldNode, newNode)
+        var a = diff(oldNode, newNode, document.getElementById('app'), 0)
         console.log('a----------------', a)
     }
     return newNode
