@@ -36,6 +36,9 @@ module.exports = {
         publicPath: process.env.NODE_ENV === 'production' ? '/assets' : '/',
         filename: '[name].[hash:8].js'
     },
+    resolve: {
+        extensions: ['.js', '.jsx', '.vue', '.less', '.css']
+    },
     module: {
         noParse (content) {
             return /jquery|vue|babel-polyfill/.test(content)
@@ -47,12 +50,15 @@ module.exports = {
                     loader: 'html-loader'
                 }
             }, {
-                test: /\.js$/,
+                test: /\.(js|jsx)$/,
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader',
                     options: process.env.CLIENT === 'h5' ? {
-                        presets: ['es2015']
+                        presets: ['react', 'es2015'],
+                        plugins: [
+                            require('babel-plugin-syntax-jsx')
+                        ]
                     } : process.env.CLIENT === 'pc' ? {
                         presets: ['es2015'],
                         plugins: [
