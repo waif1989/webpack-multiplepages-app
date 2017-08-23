@@ -1,41 +1,37 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
-import jsxToString from 'jsx-to-string'
-import reactElementToJSXString from 'react-element-to-jsx-string'
+import { render, findDOMNode } from 'react-dom'
+import ReactDOMServer from 'react-dom/server'
+
 
 class Header extends Component {
     constructor (props) {
         super(props)
     }
+    componentDidMount () {
+        const el = findDOMNode(this)
+        console.log('====', el.outerHTML)
+    }
     render () {
         return (
-            <div>
-                This is JSX Header
+            <div className="d1">
+                <p className="text1">This is JSX Header</p>
             </div>
         )
     }
 }
 
-/*import React from 'react'
-import jsxToString from 'jsx-to-string'
-
-let Basic = React.createClass({
-    render() {
-        return (
-            <div />
-        );
-    }
-})*/
+/*const Header = (
+    <div className="d1">
+        <p className="text1">heeel</p>
+    </div>
+)*/
 
 function header () {
-    // jsxToString(<Basic test1="test" />)
-    // return 'llk'
-    render(
-        <Header/>,
+   /* render(
+        <Header />,
         document.getElementById('app')
-    )
-    return reactElementToJSXString(<Header/>)
+    )*/
+    return ReactDOMServer.renderToString(<Header />)
 }
 
-// module.exports = { header }
 export default header
