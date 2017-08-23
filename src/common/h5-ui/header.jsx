@@ -37,6 +37,7 @@ function header (options /* @param options {Object} */) {
     /* @param options
      * -- @property styleCustom {Object}
      * -- @property componProps {Object}
+     * -- @property rootId {String}
      * -- @property reactRender {Boolean}
      * */
     if (!options) {
@@ -53,7 +54,7 @@ function header (options /* @param options {Object} */) {
         if (options.reactRender) {
             render(
                 <Header someProperty={initProps} />,
-                options.rootDocId ? document.getElementById(options.rootDocId) : document.getElementById('app')
+                options.rootId ? document.getElementById(options.rootId) : document.getElementById('app')
             )
         }
         return ReactDOMServer.renderToStaticMarkup(<Header someProperty={initProps} />)

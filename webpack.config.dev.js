@@ -7,6 +7,7 @@ const webpack = require('webpack')
 const path = require('path')
 const glob = require('glob')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const src = path.resolve(process.cwd(), 'src')
 const entries = {}
 const outputHtml = []
@@ -50,15 +51,12 @@ module.exports = {
                     loader: 'html-loader'
                 }
             }, {
-                test: /\.(js|jsx)$/,
+                test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader',
                     options: process.env.CLIENT === 'h5' ? {
-                        presets: ['react', 'es2015'],
-                        plugins: [
-                            require('babel-plugin-syntax-jsx')
-                        ]
+                        presets: ['es2015']
                     } : process.env.CLIENT === 'pc' ? {
                         presets: ['es2015'],
                         plugins: [
@@ -71,10 +69,38 @@ module.exports = {
                         presets: ['es2015']
                     }
                 }
+            }, {
+                test: /\.jsx$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['react', 'es2015'],
+                        plugins: [
+                            require('babel-plugin-syntax-jsx')
+                        ]
+                    }
+                }
+            }, {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        scss: 'vue-style-loader!css-loader!sass-loader',
+                        less: 'vue-style-loader!css-loader!less-loader',
+                        sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+                        css: ExtractTextPlugin.extract({
+                            use: 'css-loader',
+                            fallback: 'vue-style-loader'
+                        })
+                    },
+                    extractCSS: true
+                }
             }
         ]
     },
     plugins:[
+        new ExtractTextPlugin('[name].css'),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             names: ['vendor'],

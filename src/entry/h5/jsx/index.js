@@ -3,7 +3,6 @@
  */
 
 import header from '../../../common/h5-ui/header'
-// header()
 const h = header({
     reactRender: false,
     styleCustom: {
