@@ -6,6 +6,7 @@
 const webpack = require('webpack')
 const path = require('path')
 const glob = require('glob')
+const nodeModulesPath = path.resolve(__dirname, 'node_modules')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const src = path.resolve(process.cwd(), 'src')
@@ -30,7 +31,7 @@ files.forEach((filePath) => {
 module.exports = {
     devtool: 'source-map',
     entry: Object.assign(entries, {
-        vendor: ['babel-polyfill', 'jquery']
+        vendor: ['babel-polyfill', 'jquery', 'vue']
     }),
     output: {
         path: path.resolve(process.cwd(), 'dist'),
@@ -41,9 +42,11 @@ module.exports = {
         extensions: ['.js', '.jsx', '.vue', '.less', '.css']
     },
     module: {
-        noParse (content) {
-            return /jquery|vue|babel-polyfill/.test(content)
-        },
+        noParse: [
+            /node_modules\/vue\.runtime\.min/,
+            /node_modules\/jquery\.min/,
+            /node_modules\/babel-polyfill/
+        ],
         rules: [
             {
                 test: /\.html$/,
@@ -86,9 +89,18 @@ module.exports = {
                 loader: 'vue-loader',
                 options: {
                     loaders: {
-                        scss: 'vue-style-loader!css-loader!sass-loader',
-                        less: 'vue-style-loader!css-loader!less-loader',
-                        sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+                        scss: ExtractTextPlugin.extract({
+                            use: 'css-loader!sass-loader',
+                            fallback: 'vue-style-loader'
+                        }),
+                        sass: ExtractTextPlugin.extract({
+                            use: 'css-loader!sass-loader',
+                            fallback: 'vue-style-loader'
+                        }),
+                        less: ExtractTextPlugin.extract({
+                            use: 'css-loader!less-loader',
+                            fallback: 'vue-style-loader'
+                        }),
                         css: ExtractTextPlugin.extract({
                             use: 'css-loader',
                             fallback: 'vue-style-loader'
@@ -98,6 +110,12 @@ module.exports = {
                 }
             }
         ]
+    },
+    resolve: {
+        alias: {
+            'vue': `${nodeModulesPath}/vue/dist/vue.min.js`,
+            'jquery': `${nodeModulesPath}/jquery/dist/jquery.min.js`
+        }
     },
     plugins:[
         new ExtractTextPlugin('[name].css'),

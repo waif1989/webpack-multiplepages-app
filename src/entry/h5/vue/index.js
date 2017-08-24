@@ -1,6 +1,7 @@
-/**
- * Created by chensiwei on 2017/7/27.
- */
+import Vue from 'vue'
+import Component from './app.vue'
+const App = Vue.extend(Component)
+Vue.config.devtools = true
 
 import header from '../../../common/h5-ui/header.jsx'
 const h = header({
@@ -15,8 +16,13 @@ const h = header({
         initProps: 1
     }
 })
-document.getElementById('app').innerHTML = h
-document.getElementById('text').addEventListener('click', () => {
-    alert('998')
+const Child = {
+    template: h
+}
+new Vue({
+    el: '#app',
+    components: {
+        app: App,
+        child: Child
+    },
 })
-// console.log('-----***', header())
