@@ -28,6 +28,7 @@ class Header extends Component {
         return (
             <div className="d1" id="d1" style={d1Style}>
                 {this.props.someProperty > 1 ? <p style={text1Style} id="text">text1</p> : <p style={text2Style} id="text">text2</p>}
+                <p className="test-class">TestClass</p>
             </div>
         )
     }

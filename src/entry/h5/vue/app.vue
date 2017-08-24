@@ -1,6 +1,10 @@
 <template>
     <div>
         <div id="vueInside" class="d1">{{msg}}</div>
+        <img :src="imgUrl2">
+        <img :src="imgUrl">
+        <img src="~assets/img/big-img.png">
+        <img src="~assets/img/small-img.png">
         <div v-html="header"></div>
         <div v-html="controlTemplate('#eee', '#333', '#d90000', number)"></div>
         <input type="text" v-model="number">
@@ -11,9 +15,14 @@
     .d1 {
         color: gray;
     }
+    .test-class {
+        color: #fff;
+    }
 </style>
 
 <script>
+    import Img from '../../../assets/img/big-img.png'
+    import Img2 from '../../../assets/img/small-img.png'
     import header from '../../../common/h5-ui/header.jsx'
     const h = header({
         reactRender: false,
@@ -31,6 +40,8 @@
         data () {
             return {
                 msg: 'This is Vue',
+                imgUrl: Img,
+                imgUrl2: Img2,
                 number: 0,
                 header: h
             }
@@ -51,7 +62,7 @@
                       }
                   },
                   componProps: {
-                      initProps: number
+                      initProps: number === '' || number === undefined ? 0 : number
                   }
               })
               return h

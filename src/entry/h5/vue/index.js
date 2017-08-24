@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Component from './app.vue'
+import './app.less'
 const App = Vue.extend(Component)
 Vue.config.devtools = true
 

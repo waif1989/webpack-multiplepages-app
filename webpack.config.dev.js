@@ -49,9 +49,34 @@ module.exports = {
         ],
         rules: [
             {
-                test: /\.html$/,
+                test: /\.(html|htm)$/,
+                // use: [ 'file-loader?name=[path][name].[ext]!extract-loader!html-loader' ]
                 use: {
-                    loader: 'html-loader'
+                    loader: 'html-loader',
+                    options: {interpolate: 'require'}
+                }
+            }, {
+                test: /\.(css|less)$/,
+                include: [path.resolve(__dirname, 'src')],
+                exclude:  /(node_modules|bower_components)/,
+                loader: ExtractTextPlugin.extract({
+                    use: 'css-loader!less-loader',
+                    fallback: 'style-loader'
+                })
+            }, {
+                test: /\.(sass|scss)$/,
+                include: [path.resolve(__dirname, 'src')],
+                exclude:  /(node_modules|bower_components)/,
+                loader: ExtractTextPlugin.extract({
+                    use: 'css-loader!sass-loader',
+                    fallback: 'style-loader'
+                })
+            }, {
+                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 3000,
+                    name: '[name].[hash:7].[ext]'
                 }
             }, {
                 test: /\.js$/,
@@ -114,7 +139,8 @@ module.exports = {
     resolve: {
         alias: {
             'vue': `${nodeModulesPath}/vue/dist/vue.min.js`,
-            'jquery': `${nodeModulesPath}/jquery/dist/jquery.min.js`
+            'jquery': `${nodeModulesPath}/jquery/dist/jquery.min.js`,
+            'assets': `${src}/assets`
         }
     },
     plugins:[
