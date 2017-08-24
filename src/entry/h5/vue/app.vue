@@ -1,10 +1,9 @@
 <template>
     <div>
         <div id="vueInside" class="d1">{{msg}}</div>
-        <img :src="imgUrl2">
-        <img :src="imgUrl">
-        <img src="~assets/img/big-img.png">
-        <img src="~assets/img/small-img.png">
+        <img :src="imgUrl2" alt="Test import image">
+        <img src="~assets/img/big-img.png" alt="Test relative path">
+        <img src="~assets/img/none.png" alt="Test base64">
         <div v-html="header"></div>
         <div v-html="controlTemplate('#eee', '#333', '#d90000', number)"></div>
         <input type="text" v-model="number">
@@ -21,7 +20,6 @@
 </style>
 
 <script>
-    import Img from '../../../assets/img/big-img.png'
     import Img2 from '../../../assets/img/small-img.png'
     import header from '../../../common/h5-ui/header.jsx'
     const h = header({
@@ -40,7 +38,6 @@
         data () {
             return {
                 msg: 'This is Vue',
-                imgUrl: Img,
                 imgUrl2: Img2,
                 number: 0,
                 header: h

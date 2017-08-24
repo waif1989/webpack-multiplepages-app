@@ -50,9 +50,8 @@ module.exports = {
         rules: [
             {
                 test: /\.(html|htm)$/,
-                // use: [ 'file-loader?name=[path][name].[ext]!extract-loader!html-loader' ]
                 use: {
-                    loader: 'html-loader',
+                    loader: 'vue-html-loader',
                     options: {interpolate: 'require'}
                 }
             }, {
