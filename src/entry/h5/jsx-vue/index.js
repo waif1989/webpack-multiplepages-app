@@ -3,22 +3,17 @@ import Component from './app.vue'
 import './app.less'
 const App = Vue.extend(Component)
 Vue.config.devtools = true
-
-import header from '../../../common/h5-ui/header.jsx'
-const h = header({
-    reactRender: false,
+import AlertComponent from '../../../common/h5-ui/alert-component.jsx'
+const alertBox = new AlertComponent({
     styleCustom: {
-        d1Style: {
-            fontSize: '30px',
-            backgroundColor: 'yellow'
+        acStyle: {
+            backgroundColor: 'red'
         }
     },
-    componProps: {
-        initProps: 1
-    }
+    text: '这是自定义的文案1'
 })
 const Child = {
-    template: h
+    template: alertBox.render()
 }
 new Vue({
     el: '#app',
@@ -27,3 +22,5 @@ new Vue({
         child: Child
     },
 })
+
+console.log('JSX x Vue')
