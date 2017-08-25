@@ -18,6 +18,12 @@ class Main extends Component {
             text: '这是默认文案'
         }
     }
+    sureFun (data) {
+        alert('sure' + data)
+    }
+    cancelFun (data) {
+        alert('cancel' + data)
+    }
     staticInsert () {
         const alertBox = new AlertComponent({
             styleCustom: {
@@ -40,7 +46,7 @@ class Main extends Component {
             },
             text: text
         })
-        alertBox.render()
+        alertBox.render(this.sureFun.bind(this), this.cancelFun.bind(this))
     }
     changeTitle (e) {
         console.log(e.target.value)
@@ -50,12 +56,15 @@ class Main extends Component {
     }
     componentDidMount () {
         this.dynamicInsert(this.state.text)
+        /*
+        * If you don't use react render to render the dom, You should use these functions below:
         document.getElementById('sureBtn').addEventListener('click', () => {
             alert('sureBtn')
         })
         document.getElementById('cancelBtn').addEventListener('click', () => {
             alert('cancelBtn')
         })
+        * */
     }
     componentWillUpdate (nextProps, nextState) {
         console.log('nextProps', nextProps, 'nextState', nextState)

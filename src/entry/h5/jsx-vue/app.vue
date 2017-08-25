@@ -28,14 +28,14 @@
                 backgroundColor: 'grey'
             }
         },
-        text: '这是自定义的文案1'
+        text: '这是组件里面注入'
     })
     export default {
         data () {
             return {
                 msg: 'This is Vue',
                 imgUrl2: Img2,
-                text: '',
+                text: '这是组件里面动态绑定',
                 alertBox: alertBox.render()
             }
         },
