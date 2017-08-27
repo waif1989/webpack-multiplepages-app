@@ -71,7 +71,6 @@ class Main extends Component {
         this.dynamicInsert(nextState.text)
     }
     render () {
-        console.log('reRender')
         return (
             <div>
                 <div id="header2" dangerouslySetInnerHTML = {{__html: this.staticInsert()}} />

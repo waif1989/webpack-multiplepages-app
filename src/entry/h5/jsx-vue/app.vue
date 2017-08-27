@@ -5,7 +5,7 @@
         <img src="~assets/img/big-img.png" alt="Test relative path">
         <img src="~assets/img/none.png" alt="Test base64">
         <div v-html="alertBox"></div>
-        <child></child>
+        <child @sureBtnCallback="childSureBtnCallback" @cancelBtnCallback="childCancelBtnCallback"></child>
         <div v-html="controlTemplate(text)"></div>
         <input type="text" v-model="text">
     </div>
@@ -52,9 +52,11 @@
         },
         methods: {
             sureBtn () {
+                this.$emit('sureBtnCallback', this.alertmessage)
                 alert('Vue sure Btn &&' + this.alertmessage)
             },
             cancelBtn () {
+                this.$emit('cancelBtnCallback', this.alertmessage)
                 alert('Vue cancel Btn &&' + this.alertmessage)
             }
         }
@@ -69,19 +71,25 @@
             }
         },
         methods: {
-          controlTemplate (text) {
-              const alertBox = new AlertComponent({
-                  styleCustom: {
-                      acStyle: {
-                          backgroundColor: 'orange'
-                      }
-                  },
-                  text: text
-              })
-              const html = alertBox.render()
-              const htmlVue = adaptToVueAttr(html)
-              return htmlVue
-          }
+            controlTemplate (text) {
+                const alertBox = new AlertComponent({
+                    styleCustom: {
+                        acStyle: {
+                            backgroundColor: 'orange'
+                        }
+                    },
+                    text: text
+                })
+                const html = alertBox.render()
+                const htmlVue = adaptToVueAttr(html)
+                return htmlVue
+            },
+            childSureBtnCallback (args) {
+                console.log('SureBtn arg---', args)
+            },
+            childCancelBtnCallback (args) {
+                console.log('CancelBtn arg---', args)
+            }
         },
         components: {
             'child': childComponents
