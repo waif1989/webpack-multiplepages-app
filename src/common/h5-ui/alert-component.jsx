@@ -77,17 +77,7 @@ function SuperAlert (options) {
     this.options = options
 }
 
-function SubAlert (options /* @param options {Object} */) {
-    /* @param options
-    * -- @property styleCustom {Object}
-    * -- @property text {String}
-    * -- @property rootId {String}
-    * -- @property reactRender {Boolean}
-    * */
-    SuperAlert.call(this, options)
-}
-
-SubAlert.prototype.render = function (fn1, fn2) {
+SuperAlert.prototype.render = function (fn1, fn2) {
     if (this.options && this.options.styleCustom) {
         this.styleObj.acStyle = this.options.styleCustom.acStyle ? Object.assign({}, this.styleObj.acStyle, this.options.styleCustom.acStyle) : this.styleObj.acStyle
     }
@@ -99,5 +89,17 @@ SubAlert.prototype.render = function (fn1, fn2) {
     }
     return ReactDOMServer.renderToStaticMarkup(<AlertBox text={this.options ? this.options.text ? this.options.text : '温馨提示' : '温馨提示'} styleObj={this.styleObj} />)
 }
+
+function SubAlert (options /* @param options {Object} */) {
+    /* @param options
+     * -- @property styleCustom {Object}
+     * -- @property text {String}
+     * -- @property rootId {String}
+     * -- @property reactRender {Boolean}
+     * */
+    SuperAlert.call(this, options)
+}
+
+SubAlert.prototype = new SuperAlert()
 
 export default SubAlert
