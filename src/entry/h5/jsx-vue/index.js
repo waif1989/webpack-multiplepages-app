@@ -10,7 +10,7 @@ const alertBox = new AlertComponent({
             backgroundColor: 'red'
         }
     },
-    text: '这是实例注入'
+    text: '这是实例外部注入'
 })
 const Child = {
     template: alertBox.render()

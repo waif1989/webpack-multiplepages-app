@@ -18,14 +18,17 @@ class AlertBox extends Component {
     cancelBtnFun () {
         this.props.cancelBtnFun(this.state.val)
     }
+    componentWillReceiveProps () {
+        console.log('componentWillReceiveProps')
+    }
     render () {
         return (
             <div className="alert-container" style={this.props.styleObj.acStyle}>
                 <div className="text-content" style={this.props.styleObj.actextStyle}>{this.props.text}</div>
-                <div><input type="text" className="alert-input" onKeyUp={(e) => this.getInputValue(e)}/></div>
+                <div><input type="text" data-v-model="alertmessage" className="alert-input" onKeyUp={(e) => this.getInputValue(e)}/></div>
                 <div className="btn-content" style={this.props.styleObj.btnContentStyle}>
-                    <button className="sure-btn" id="sureBtn" style={this.props.styleObj.sureBtnStyle} onClick={(e) => this.sureBtnFun(e)}>Sure</button>
-                    <button className="cancel-btn" id="cancelBtn" style={this.props.styleObj.cancelBtnStyle} onClick={(e) => this.cancelBtnFun(e)}>Cancel</button>
+                    <button className="sure-btn" data-on-click="sureBtn" id="sureBtn" style={this.props.styleObj.sureBtnStyle} onClick={(e) => this.sureBtnFun(e)}>Sure</button>
+                    <button className="cancel-btn" data-on-click="cancelBtn" id="cancelBtn" style={this.props.styleObj.cancelBtnStyle} onClick={(e) => this.cancelBtnFun(e)}>Cancel</button>
                 </div>
                 <div className="clear" style={this.props.styleObj.clearStyle}></div>
             </div>
