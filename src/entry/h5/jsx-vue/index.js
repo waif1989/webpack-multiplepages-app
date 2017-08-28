@@ -21,6 +21,9 @@ new Vue({
         app: App,
         child: Child
     },
+    mounted () {
+        document.getElementById('static').innerHTML = alertBox.render()
+    }
 })
 
 console.log('JSX x Vue')
