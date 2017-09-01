@@ -1,5 +1,5 @@
-import alertSub from '../../../common/h5-ui/alert-component-purely'
-const tem = new alertSub({
+import AlertSub from '../../../common/h5-ui/alert-component-purely'
+const tem = new AlertSub({
     text: '初始化标题',
     content: '初始化内容',
     innerHTML: true,
