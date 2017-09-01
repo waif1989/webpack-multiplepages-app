@@ -1,6 +1,10 @@
 var toStyleString = require('to-style').string
 import inheritPrototype from '../../utils/parasitic-inheritance'
 
+/**
+ * Generic alert product.
+ * @constructor
+ */
 function AlertSuper (options) {
     this.styleObj = {
         acStyle: {
@@ -42,13 +46,18 @@ function AlertSuper (options) {
     this.options = options
 }
 
+/**
+ * Create alert component element.
+ * @abstract
+ * @return {string}
+ */
 AlertSuper.prototype.createEle = function () {
     const template = `
         <div class="alert-container" id="common-alert-container" style="${toStyleString(this.styleObj.acStyle)}">
             <div class="text-title" style="${toStyleString(this.styleObj.actitleStyle)}">
                 ${this.options ? this.options.text ? `<h4>${this.options.text}</h4>` : `<h4>温馨提示</h4>` : `<h4>温馨提示</h4>`}
             </div>
-            <div class="content">
+            <div class="content" id="common-content">
                 ${this.options ? this.options.content ? this.options.content : '你好' : '你好'}
             </div>
             <div><input type="text" id="common-alert-input" class="common-alert-input" placeholder="请输入你的问题" /></div>
@@ -62,6 +71,11 @@ AlertSuper.prototype.createEle = function () {
     return template
 }
 
+/**
+ * Insert html string into element.
+ * @abstract
+ * @return {object}
+ */
 AlertSuper.prototype.render = function () {
     var template = this.createEle()
     if (this.options.innerHTML) {
@@ -71,11 +85,22 @@ AlertSuper.prototype.render = function () {
     return this
 }
 
+/**
+ * Change alert component content.
+ * @abstract
+ * @return {object}
+ */
 AlertSuper.prototype.changeContent = function (contentText) {
     this.options.content = contentText
+    document.getElementById('common-content').innerHTML = this.options.content
     return this
 }
 
+/**
+ * Get val of alert component.
+ * @abstract
+ * @return {string}
+ */
 AlertSuper.prototype.getValue = function () {
     var val = this.options.inputValue ? this.options.inputValue : ''
     return val
@@ -122,6 +147,10 @@ function _funDistribution (id, that) {
     return val
 }
 
+/**
+ * Generic alert component class.
+ * @constructor
+ */
 function AlertSub (options) {
     /** @param {Object} options
      * @param {Object} options.styleCustom - Style object
@@ -129,6 +158,8 @@ function AlertSub (options) {
      * @param {Bealoon} options.innerHTML - Whether insert in document
      * @param {String} options.text - Title of component
      * @param {String} options.content - Content of component
+     * @param {Function} options.sureCallback - Function of surebtn callback
+     * @param {Function} options.cancelCallback - Function of cancelbtn callback
      */
     AlertSuper.call(this, options)
 }

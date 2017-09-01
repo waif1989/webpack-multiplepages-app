@@ -10,7 +10,7 @@ const tem = new AlertSub({
 tem.render()
 
 document.getElementById('change').addEventListener('click', () => {
-    tem.changeContent('改变内容').render()
+    tem.changeContent('改变内容')
 })
 
 function outSureCallback (val) {
