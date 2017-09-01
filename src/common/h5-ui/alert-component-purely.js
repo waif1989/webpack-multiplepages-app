@@ -62,32 +62,6 @@ AlertSuper.prototype.createEle = function () {
     return template
 }
 
-/*AlertSuper.prototype.regDomListener = function () {
-    this.handleEvent = function (event) {
-        // Event commission
-        switch (event.type) {
-            case 'click':
-                var e = event || window.event
-                var target = e.target || e.srcElement
-                console.log('-----', target.id)
-                this.btnCallBack(target.id, fn)
-                break
-            case 'keyup':
-                var e = event || window.event
-                var target = e.target || e.srcElement
-                console.log('-----', target.value)
-                this.options.inputValue = target.value
-                break
-            default:
-                break
-        }
-    }
-    var element = ''
-    this.options && this.options.rootId ? element = document.getElementById(this.options.rootId) : element = document.body
-    element.addEventListener('click', this, false)
-    element.addEventListener('keyup', this, false)
-}*/
-
 AlertSuper.prototype.render = function () {
     var template = this.createEle()
     if (this.options.innerHTML) {
@@ -102,23 +76,9 @@ AlertSuper.prototype.changeContent = function (contentText) {
     return this
 }
 
-AlertSuper.prototype.btnCallBack = function (id, fn) {
+AlertSuper.prototype.getValue = function () {
     var val = this.options.inputValue ? this.options.inputValue : ''
-    switch (id) {
-        case 'sure-btn':
-            window.alert('sure-btn----' + val)
-            break
-        case 'cancel-btn':
-            window.alert('cancel-btn----' + val)
-            break
-        default:
-            break
-    }
     return val
-}
-
-AlertSuper.prototype.sureBtnCallback = function () {
-
 }
 
 function _regDomListener (that) {
@@ -128,13 +88,11 @@ function _regDomListener (that) {
             case 'click':
                 var e = event || window.event
                 var target = e.target || e.srcElement
-                console.log('-----', target.id)
-                // this.btnCallBack(target.id, fn)
+                _funDistribution(target.id, that)
                 break
             case 'keyup':
                 var e = event || window.event
                 var target = e.target || e.srcElement
-                console.log('-----', target.value)
                 that.options.inputValue = target.value
                 break
             default:
@@ -145,6 +103,23 @@ function _regDomListener (that) {
     that.options && that.options.rootId ? element = document.getElementById(that.options.rootId) : element = document.body
     element.addEventListener('click', that, false)
     element.addEventListener('keyup', that, false)
+}
+
+function _funDistribution (id, that) {
+    var val = that.options.inputValue ? that.options.inputValue : ''
+    var fn1 = that.options.sureCallback ? that.options.sureCallback : function () {}
+    var fn2 = that.options.cancelCallback ? that.options.cancelCallback : function () {}
+    switch (id) {
+        case 'sure-btn':
+            fn1(val)
+            break
+        case 'cancel-btn':
+            fn2(val)
+            break
+        default:
+            break
+    }
+    return val
 }
 
 function AlertSub (options) {
