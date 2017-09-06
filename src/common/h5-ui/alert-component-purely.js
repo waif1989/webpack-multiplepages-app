@@ -1,5 +1,5 @@
 var toStyleString = require('to-style').string
-import inheritPrototype from '../../utils/parasitic-inheritance'
+var inheritPrototype = require('../../utils/parasitic-inheritance')
 
 /**
  * Generic alert product.
@@ -52,15 +52,17 @@ function AlertSuper (options) {
  * @return {string}
  */
 AlertSuper.prototype.createEle = function () {
-    const template = `
-        <div class="alert-container" id="common-alert-container" style="${toStyleString(this.styleObj.acStyle)}">
+    var template =
+     `
+        <div class="common-alert-container" 
+             style="${toStyleString(_mergeStyle(this.styleObj.acStyle, this.options.styleCustom ? this.options.styleCustom.acStyle ? this.options.styleCustom.acStyle : {} : {}))}">
             <div class="text-title" style="${toStyleString(this.styleObj.actitleStyle)}">
                 ${this.options ? this.options.text ? `<h4>${this.options.text}</h4>` : `<h4>温馨提示</h4>` : `<h4>温馨提示</h4>`}
             </div>
-            <div class="content" id="common-content">
+            <div class="common-content" data-alertcontent="common-content">
                 ${this.options ? this.options.content ? this.options.content : '你好' : '你好'}
             </div>
-            <div><input type="text" id="common-alert-input" class="common-alert-input" placeholder="请输入你的问题" /></div>
+            <div><input type="text" class="common-alert-input" data-inputname="common-alert-input" placeholder="请输入你的问题" /></div>
             <div class="btn-content" style="${toStyleString(this.styleObj.btnContentStyle)}">
                 <button class="sure-btn" id="sure-btn" style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
                 <button class="cancel-btn" id="cancel-btn" style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
@@ -78,7 +80,7 @@ AlertSuper.prototype.createEle = function () {
  */
 AlertSuper.prototype.render = function () {
     var template = this.createEle()
-    if (this.options.innerHTML) {
+    if (this.options.sureInnerHTML) {
         this.options && this.options.rootId ? document.getElementById(this.options.rootId).innerHTML = template : document.body.innerHTML = template
         _regDomListener(this)
     }
@@ -91,8 +93,18 @@ AlertSuper.prototype.render = function () {
  * @return {object}
  */
 AlertSuper.prototype.changeContent = function (contentText) {
+    var appId = this.options.rootId ? document.getElementById(this.options.rootId) : document.body
+    var arr = appId.getElementsByTagName("*")
+    var len = arr.length
+    var targetNode = ''
+    for (var i = 0; i < len; i++) {
+        if (!!arr[i].dataset.alertcontent) {
+            targetNode = arr[i]
+            break
+        }
+    }
     this.options.content = contentText
-    document.getElementById('common-content').innerHTML = this.options.content
+    targetNode.innerHTML = this.options.content
     return this
 }
 
@@ -106,6 +118,11 @@ AlertSuper.prototype.getValue = function () {
     return val
 }
 
+/**
+ * Registered dom listener.
+ *
+ * @return {string}
+ */
 function _regDomListener (that) {
     that.handleEvent = function (event) {
         // Event commission
@@ -118,7 +135,7 @@ function _regDomListener (that) {
             case 'keyup':
                 var e = event || window.event
                 var target = e.target || e.srcElement
-                that.options.inputValue = target.value
+                _changeValue(target.value, that)
                 break
             default:
                 break
@@ -130,6 +147,11 @@ function _regDomListener (that) {
     element.addEventListener('keyup', that, false)
 }
 
+/**
+ * Distribute dom events.
+ *
+ * @return {string}
+ */
 function _funDistribution (id, that) {
     var val = that.options.inputValue ? that.options.inputValue : ''
     var fn1 = that.options.sureCallback ? that.options.sureCallback : function () {}
@@ -148,14 +170,30 @@ function _funDistribution (id, that) {
 }
 
 /**
+ * Change input value.
+ *
+ * @return {string}
+ */
+function _changeValue (val, that) {
+    that.options.inputValue = val
+    return that.options.inputValue
+}
+
+function _mergeStyle (defaultStyle, customStyle) {
+ return Object.assign(defaultStyle, customStyle)
+}
+
+/**
  * Generic alert component class.
  * @constructor
  */
 function AlertSub (options) {
     /** @param {Object} options
      * @param {Object} options.styleCustom - Style object
+     * @param {Object} options.styleCustom.acStyle - Style object
      * @param {String} options.rootId - RootId insert
-     * @param {Bealoon} options.innerHTML - Whether insert in document
+     * @param {Bealoon} options.sureInnerHTML - Whether insert in document
+     * @param {String} options.ownMarkString - Add a tag for all class attributes
      * @param {String} options.text - Title of component
      * @param {String} options.content - Content of component
      * @param {Function} options.sureCallback - Function of surebtn callback
