@@ -4,6 +4,7 @@ const tem = new AlertSub({
     content: '初始化内容',
     sureInnerHTML: true,
     rootId: 'app',
+    ownMarkString: 'myown',
     styleCustom: {
         acStyle: {
             backgroundColor: 'red'

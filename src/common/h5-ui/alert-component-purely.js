@@ -64,8 +64,8 @@ AlertSuper.prototype.createEle = function () {
             </div>
             <div><input type="text" class="common-alert-input" data-inputname="common-alert-input" placeholder="请输入你的问题" /></div>
             <div class="btn-content" style="${toStyleString(this.styleObj.btnContentStyle)}">
-                <button class="sure-btn" id="sure-btn" style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
-                <button class="cancel-btn" id="cancel-btn" style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
+                <button class="sure-btn" data-btnname="sure-btn" style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
+                <button class="cancel-btn" data-btnname="cancel-btn" style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
                 <div class="clear" style="${toStyleString(this.styleObj.clearStyle)}"></div>
             </div>
         </div>
@@ -80,8 +80,14 @@ AlertSuper.prototype.createEle = function () {
  */
 AlertSuper.prototype.render = function () {
     var template = this.createEle()
+    var newTem = ''
+    if (this.options.ownMarkString) {
+        newTem = _addMarkClass(template, this.options.ownMarkString)
+    } else {
+        newTem = template
+    }
     if (this.options.sureInnerHTML) {
-        this.options && this.options.rootId ? document.getElementById(this.options.rootId).innerHTML = template : document.body.innerHTML = template
+        this.options && this.options.rootId ? document.getElementById(this.options.rootId).innerHTML = newTem : document.body.innerHTML = newTem
         _regDomListener(this)
     }
     return this
@@ -94,7 +100,7 @@ AlertSuper.prototype.render = function () {
  */
 AlertSuper.prototype.changeContent = function (contentText) {
     var appId = this.options.rootId ? document.getElementById(this.options.rootId) : document.body
-    var arr = appId.getElementsByTagName("*")
+    var arr = appId.getElementsByTagName('*')
     var len = arr.length
     var targetNode = ''
     for (var i = 0; i < len; i++) {
@@ -130,7 +136,7 @@ function _regDomListener (that) {
             case 'click':
                 var e = event || window.event
                 var target = e.target || e.srcElement
-                _funDistribution(target.id, that)
+                _funDistribution(target.dataset.btnname, that)
                 break
             case 'keyup':
                 var e = event || window.event
@@ -152,11 +158,11 @@ function _regDomListener (that) {
  *
  * @return {string}
  */
-function _funDistribution (id, that) {
+function _funDistribution (btnName, that) {
     var val = that.options.inputValue ? that.options.inputValue : ''
     var fn1 = that.options.sureCallback ? that.options.sureCallback : function () {}
     var fn2 = that.options.cancelCallback ? that.options.cancelCallback : function () {}
-    switch (id) {
+    switch (btnName) {
         case 'sure-btn':
             fn1(val)
             break
@@ -179,8 +185,28 @@ function _changeValue (val, that) {
     return that.options.inputValue
 }
 
+/**
+ * Merge your custom style with default style.
+ *
+ * @return {object}
+ */
 function _mergeStyle (defaultStyle, customStyle) {
  return Object.assign(defaultStyle, customStyle)
+}
+
+/**
+ * Add your custom marktag into default class.
+ *
+ * @return {string}
+ */
+function _addMarkClass (element, ownMarkString) {
+    var classRegexp = /class=['"]{1}([^'"]*)['"]{1}/g
+    var newele = element.replace(classRegexp, function (match) {
+        var tem1 = match.replace(/class=(['"]*)/g, '')
+        var tem2 = tem1.replace(/['"]/g, '')
+        return `class="${tem2}-${ownMarkString}"`
+    })
+    return newele
 }
 
 /**
@@ -188,16 +214,16 @@ function _mergeStyle (defaultStyle, customStyle) {
  * @constructor
  */
 function AlertSub (options) {
-    /** @param {Object} options
-     * @param {Object} options.styleCustom - Style object
-     * @param {Object} options.styleCustom.acStyle - Style object
-     * @param {String} options.rootId - RootId insert
-     * @param {Bealoon} options.sureInnerHTML - Whether insert in document
-     * @param {String} options.ownMarkString - Add a tag for all class attributes
-     * @param {String} options.text - Title of component
-     * @param {String} options.content - Content of component
-     * @param {Function} options.sureCallback - Function of surebtn callback
-     * @param {Function} options.cancelCallback - Function of cancelbtn callback
+    /** @param {object} options
+     * @param {object} options.styleCustom - Style object
+     * @param {object} options.styleCustom.acStyle - Style object
+     * @param {string} options.rootId - RootId insert
+     * @param {bealoon} options.sureInnerHTML - Whether insert in document
+     * @param {string} options.ownMarkString - Add a tag for all class attributes
+     * @param {string} options.text - Title of component
+     * @param {string} options.content - Content of component
+     * @param {function} options.sureCallback - Function of surebtn callback
+     * @param {function} options.cancelCallback - Function of cancelbtn callback
      */
     AlertSuper.call(this, options)
 }
