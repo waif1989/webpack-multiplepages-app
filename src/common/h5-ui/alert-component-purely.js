@@ -54,19 +54,20 @@ function AlertSuper (options) {
 AlertSuper.prototype.createEle = function () {
     var template =
      `
-        <div class="common-alert-container" 
+        <div class="com-al-con" 
              style="${toStyleString(_mergeStyle(this.styleObj.acStyle, this.options.styleCustom ? this.options.styleCustom.acStyle ? this.options.styleCustom.acStyle : {} : {}))}">
-            <div class="text-title" style="${toStyleString(this.styleObj.actitleStyle)}">
+            <div class="com-al-tit" 
+                 style="${toStyleString(this.styleObj.actitleStyle)}">
                 ${this.options ? this.options.text ? `<h4>${this.options.text}</h4>` : `<h4>温馨提示</h4>` : `<h4>温馨提示</h4>`}
             </div>
-            <div class="common-content" data-alertcontent="common-content">
+            <div class="com-de" data-alertcontent="alertcontent">
                 ${this.options ? this.options.content ? this.options.content : '你好' : '你好'}
             </div>
-            <div><input type="text" class="common-alert-input" data-inputname="common-alert-input" placeholder="请输入你的问题" /></div>
-            <div class="btn-content" style="${toStyleString(this.styleObj.btnContentStyle)}">
-                <button class="sure-btn" data-btnname="sure-btn" style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
-                <button class="cancel-btn" data-btnname="cancel-btn" style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
-                <div class="clear" style="${toStyleString(this.styleObj.clearStyle)}"></div>
+            <div><input type="text" class="com-al-in" data-inputname="common-alert-input" placeholder="请输入你的问题" /></div>
+            <div class="com-btn-con" style="${toStyleString(this.styleObj.btnContentStyle)}">
+                <button class="com-sure-btn" data-btnname="sure-btn" style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
+                <button class="com-can-btn" data-btnname="cancel-btn" style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
+                <div class="com-clear" style="${toStyleString(this.styleObj.clearStyle)}"></div>
             </div>
         </div>
     `
@@ -202,9 +203,8 @@ function _mergeStyle (defaultStyle, customStyle) {
 function _addMarkClass (element, ownMarkString) {
     var classRegexp = /class=['"]{1}([^'"]*)['"]{1}/g
     var newele = element.replace(classRegexp, function (match) {
-        var tem1 = match.replace(/class=(['"]*)/g, '')
-        var tem2 = tem1.replace(/['"]/g, '')
-        return `class="${tem2}-${ownMarkString}"`
+        var tem = match.replace(/class|=|'|"/g, '')
+        return `class="${tem}-${ownMarkString}"`
     })
     return newele
 }
