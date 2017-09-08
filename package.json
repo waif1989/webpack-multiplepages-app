@@ -9,6 +9,7 @@
     "fs": "0.0.1-security",
     "glob": "^7.1.2",
     "jquery": "^3.2.1",
+    "jsx-transform": "^2.3.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "to-style": "^1.3.3",
