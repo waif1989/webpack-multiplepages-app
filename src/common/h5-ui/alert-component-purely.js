@@ -88,19 +88,7 @@ AlertSuper.prototype.createEle = function () {
 AlertSuper.prototype.render = function () {
     var template = this.createEle()
     if (this.options.sureInnerHTML) {
-        var ua = navigator.userAgent
-        if (ua.match(/iP(hone|od|ad)/i)) {
-            var ver = _iOSversion()
-            if (ver > '9.1.2') {
-                var frag = document.createRange().createContextualFragment(template)
-                this.options && this.options.rootId ? document.getElementById(this.options.rootId).appendChild(frag) : document.body.appendChild(frag)
-            } else {
-                this.options && this.options.rootId ? document.getElementById(this.options.rootId).innerHTML = template : document.body.innerHTML = template
-            }
-        } else {
-            var frag = document.createRange().createContextualFragment(template)
-            this.options && this.options.rootId ? document.getElementById(this.options.rootId).appendChild(frag) : document.body.appendChild(frag)
-        }
+        _replaceInnerHTML(this.options && this.options.rootId ? document.getElementById(this.options.rootId) : document.body, template)
         _regDomListener(this)
     }
     return this
@@ -220,19 +208,6 @@ function _addMarkClass (element, ownMarkString) {
         return `class="${tem}-${ownMarkString}"`
     })
     return newele
-}
-
-/**
- * Judge IOS version.
- *
- * @return {string}
- */
-function _iOSversion () {
-    if (/iP(hone|od|ad)/.test(window.navigator.platform)) {
-        var v = (window.navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)
-        // return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)]
-        return `${parseInt(v[1], 10)}.${parseInt(v[2], 10)}.${parseInt(v[3] || 0, 10)}`
-    }
 }
 
 /**
