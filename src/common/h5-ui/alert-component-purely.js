@@ -123,7 +123,8 @@ AlertSuper.prototype.changeContent = function (contentText) {
         }
     }
     this.options.content = contentText
-    targetNode.innerHTML = this.options.content
+    // targetNode.innerHTML = this.options.content
+    _replaceInnerHTML(targetNode, this.options.content)
     return this
 }
 
@@ -232,6 +233,16 @@ function _iOSversion () {
         // return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)]
         return `${parseInt(v[1], 10)}.${parseInt(v[2], 10)}.${parseInt(v[3] || 0, 10)}`
     }
+}
+
+/**
+ * Replace content from newNode to oldNode
+ *
+ */
+function _replaceInnerHTML (oldDiv, html) {
+    var newDiv = oldDiv.cloneNode(false)
+    newDiv.innerHTML = html
+    oldDiv.parentNode.replaceChild(newDiv, oldDiv)
 }
 
 /**
