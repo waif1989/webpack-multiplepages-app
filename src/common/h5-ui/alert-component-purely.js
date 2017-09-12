@@ -162,8 +162,8 @@ function _regDomListener (that) {
  */
 function _funDistribution (btnName, that) {
     var val = that.options.inputValue ? that.options.inputValue : ''
-    var fn1 = that.options.sureCallback ? that.options.sureCallback : function () {}
-    var fn2 = that.options.cancelCallback ? that.options.cancelCallback : function () {}
+    var fn1 = that.options.onSureFun ? that.options.onSureFun : function () {}
+    var fn2 = that.options.onCancelFun ? that.options.onCancelFun : function () {}
     switch (btnName) {
         case 'sure-btn':
             fn1(val)
@@ -233,8 +233,8 @@ function AlertSub (options) {
      * @param {string} options.ownMarkString - Add a tag for all class attributes
      * @param {string} options.text - Title of component
      * @param {string} options.content - Content of component
-     * @param {function} options.sureCallback - Function of surebtn callback
-     * @param {function} options.cancelCallback - Function of cancelbtn callback
+     * @param {function} options.onSureFun - Function of surebtn callback
+     * @param {function} options.onCancelFun - Function of cancelbtn callback
      */
     AlertSuper.call(this, options)
 }

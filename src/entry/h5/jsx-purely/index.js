@@ -10,8 +10,8 @@ const tem = new AlertSub({
             backgroundColor: 'red'
         }
     },
-    sureCallback: outSureCallback,
-    cancelCallback: outCancelCallback
+    onSureFun: outSureCallback,
+    onCancelFun: outCancelCallback
 })
 tem.render()
 
