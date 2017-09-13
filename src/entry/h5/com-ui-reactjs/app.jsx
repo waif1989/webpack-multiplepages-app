@@ -7,9 +7,16 @@ import AlertComponent from '../../../common/h5-ui/alert-component-purely'
 class DynamicAlert extends React.Component {
     constructor (props) {
         super(props)
+        this.htmlString = ''
         this.state = {
             text: '这是子组件state属性文案'
         }
+    }
+    componentWillMount () {
+        this.htmlString = this.newTemplate()
+    }
+    componentWillUpdate (nextProps, nextState) {
+        console.log('childNextProps:', nextProps, 'childNextState:', nextState)
     }
     getInputValue (e) {
         this.setState({
@@ -27,7 +34,7 @@ class DynamicAlert extends React.Component {
     newTemplate () {
         const that = this
         const alertBox = new AlertComponent({
-            text: that.props.title || '动态注册标题',
+            // text: that.props.title || '动态注册标题',
             // content: that.props.content || '动态注册内容',
             styleCustom: {
                 acStyle: {
@@ -37,11 +44,9 @@ class DynamicAlert extends React.Component {
         })
          return alertBox.createEle()
     }
-    componentWillUpdate (nextProps, nextState) {
-        console.log('childNextProps', nextProps, 'childNextState', nextState)
-    }
     render () {
-        const html = this.newTemplate()
+        console.log('child update')
+        const html = this.htmlString
         const that = this
         const tem = ReactHtmlParser(html, {
             decodeEntities: true,
@@ -49,6 +54,9 @@ class DynamicAlert extends React.Component {
                 if (!node.attribs) return
                 if (node.attribs['data-inputname'] === 'common-alert-input') {
                     return <input  key="a1" className={node.attribs.class} style={styletoobject(node.attribs.style)} type="text" onKeyUp={(e) => that.getInputValue(e)} placeholder={that.props.placeholder} />
+                }
+                if (node.attribs['data-alerttitle'] === 'alerttitle') {
+                    return <div  key="a5" className={node.attribs.class} style={styletoobject(node.attribs.style)}>{that.props.title}</div>
                 }
                 if (node.attribs['data-alertcontent'] === 'alertcontent') {
                     return <div  key="a2" className={node.attribs.class} style={styletoobject(node.attribs.style)}>{that.state.text}</div>
@@ -99,9 +107,10 @@ class Main extends Component {
 
     }
     componentWillUpdate (nextProps, nextState) {
-        console.log('parentNextProps', nextProps, 'parentNextState', nextState)
+        console.log('parentNextProps:', nextProps, 'parentNextState:', nextState)
     }
     render () {
+        console.log('parent update')
         return (
             <div>
                 <p>These elements below is in the reactElement</p>

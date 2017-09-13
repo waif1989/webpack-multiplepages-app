@@ -58,6 +58,7 @@ AlertSuper.prototype.createEle = function () {
         <div class="com-al-con" 
              style="${toStyleString(_mergeStyle(this.styleObj.acStyle, this.options.styleCustom ? this.options.styleCustom.acStyle ? this.options.styleCustom.acStyle : {} : {}))}">
             <div class="com-al-tit" 
+                 data-alerttitle="alerttitle"
                  style="${toStyleString(this.styleObj.actitleStyle)}">
                 ${this.options ? this.options.text ? `<h4>${this.options.text}</h4>` : `<h4>温馨提示</h4>` : `<h4>温馨提示</h4>`}
             </div>
