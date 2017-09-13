@@ -59,13 +59,22 @@ AlertSuper.prototype.createEle = function () {
              style="${toStyleString(_mergeStyle(this.styleObj.acStyle, this.options.styleCustom ? this.options.styleCustom.acStyle ? this.options.styleCustom.acStyle : {} : {}))}">
             <div class="com-al-tit" 
                  data-alerttitle="alerttitle"
+                 data-v-text="alerttitle"
                  style="${toStyleString(this.styleObj.actitleStyle)}">
                 ${this.options ? this.options.text ? `<h4>${this.options.text}</h4>` : `<h4>温馨提示</h4>` : `<h4>温馨提示</h4>`}
             </div>
-            <div class="com-de" data-alertcontent="alertcontent">
+            <div class="com-de" 
+                 data-v-text="alertcontent"
+                 data-alertcontent="alertcontent">
                 ${this.options ? this.options.content ? this.options.content : '你好' : '你好'}
             </div>
-            <div><input type="text" class="com-al-in" data-inputname="common-alert-input" placeholder="请输入你的问题" /></div>
+            <div>
+                <input type="text" 
+                       class="com-al-in" 
+                       data-inputname="common-alert-input" 
+                       data-v-model="commonAlertInput" 
+                       placeholder="请输入你的问题" />
+            </div>
             <div class="com-btn-con" style="${toStyleString(this.styleObj.btnContentStyle)}">
                 <button class="com-sure-btn" data-btnname="sure-btn" style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
                 <button class="com-can-btn" data-btnname="cancel-btn" style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
