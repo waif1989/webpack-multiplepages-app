@@ -117,9 +117,10 @@ class Main extends Component {
                 <div id="header2" dangerouslySetInnerHTML = {{__html: this.staticInsert()}} />
                 <br />
                 <div id="header">
-                    <DynamicAlert placeholder={'从props传入的placeholder'} title={this.state.text} sureBtnFun={(e) => this.sureFun(e)} cancelBtnFun={(e) => this.cancelFun(e)} />
+                    <DynamicAlert placeholder={'从父中设置静态props传入的placeholder'} title={this.state.text} sureBtnFun={(e) => this.sureFun(e)} cancelBtnFun={(e) => this.cancelFun(e)} />
                 </div>
-                <input type="text" placeholder="父组件的输入框" onKeyUp={(e) => this.getInputValue(e)} />
+                <br />
+                <input type="text" placeholder="父组件的输入框，输入便可以改变父state" onKeyUp={(e) => this.getInputValue(e)} />
             </div>
         )
     }
