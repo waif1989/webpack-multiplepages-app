@@ -11,3 +11,4 @@ function inheritPrototype (SubClass, SuperClass) {
 }
 
 module.exports = inheritPrototype
+module.exports.default = inheritPrototype
