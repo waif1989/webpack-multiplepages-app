@@ -1,7 +1,7 @@
 <template>
     <div>
         <p>These elements below is in the vueElement</p>
-        <child :alerttitle="parentTile"></child>
+        <child :alerttitle="parentTile" @parentOnSure="sureFun" @parentOnCancel="cancelFun"></child>
         <br />
         <input type="text" placeholder="'父组件的输入框，输入便可以改变父data里面的title属性'" v-model="parentTile">
     </div>
@@ -27,19 +27,22 @@
         template: tem,
         data () {
             return {
-                // alerttitle: '这是子组件data属性title',
+                // alerttitle: this.title,
                 alertcontent: '这是子组件data属性content',
-                commonAlertInput: '从父中设置静态props传入的placeholder'
+                commonAlertInput: ''
             }
         },
-        /*computed: {
-            alertcontent () {
-                return this.commonAlertInput
-            }
-        },*/
-        watch: {
-            commonAlertInput () {
+        methods: {
+            inputFun () {
                 this.alertcontent = this.commonAlertInput
+            },
+            sureFun () {
+                console.log('这是vue子组件sure按钮抛出：' + this.commonAlertInput)
+                this.$emit('parentOnSure', this.commonAlertInput)
+            },
+            cancelFun () {
+                console.log('这是vue子组件cancel按钮抛出：' + this.commonAlertInput)
+                this.$emit('parentOnCancel', this.commonAlertInput)
             }
         },
         updated () {
@@ -53,7 +56,12 @@
             }
         },
         methods: {
-
+            sureFun (args) {
+                console.log('这是vue父组件sure按钮抛出：' + args)
+            },
+            cancelFun (args) {
+                console.log('这是vue父组件cancel按钮抛出：' + args)
+            }
         },
         components: {
             'child': childComponent

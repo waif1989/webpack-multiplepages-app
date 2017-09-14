@@ -73,11 +73,18 @@ AlertSuper.prototype.createEle = function () {
                        class="com-al-in" 
                        data-inputname="common-alert-input" 
                        data-v-model="commonAlertInput" 
+                       data-on-keyup="inputFun"
                        placeholder="请输入你的问题" />
             </div>
             <div class="com-btn-con" style="${toStyleString(this.styleObj.btnContentStyle)}">
-                <button class="com-sure-btn" data-btnname="sure-btn" style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
-                <button class="com-can-btn" data-btnname="cancel-btn" style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
+                <button class="com-sure-btn" 
+                        data-btnname="sure-btn" 
+                        data-on-click="sureFun"
+                        style="${toStyleString(this.styleObj.sureBtnStyle)}">Sure</button>
+                <button class="com-can-btn" 
+                        data-btnname="cancel-btn" 
+                        data-on-click="cancelFun"
+                        style="${toStyleString(this.styleObj.cancelBtnStyle)}">Cancel</button>
                 <div class="com-clear" style="${toStyleString(this.styleObj.clearStyle)}"></div>
             </div>
         </div>
