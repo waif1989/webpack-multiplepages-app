@@ -65,7 +65,7 @@ CounterSuper.prototype.createTem = function (doc) {
 
 CounterSuper.prototype.useReact = function () {
     const tem = this.createTem()
-    return <CounterReact initData={this.options} template={tem} context={this} />
+    return <CounterReact template={tem} context={this} />
 }
 
 CounterSuper.prototype.useVue = function () {
@@ -78,7 +78,7 @@ CounterSuper.prototype.useVue = function () {
 }
 
 CounterSuper.prototype.add = function () {
-    if (this.options && this.options.initVal) {
+    if (this.options && typeof this.options.initVal === 'number') {
         this.options.initVal += 1
     }
     if (this.options && this.options.addOnCall) {
@@ -87,7 +87,7 @@ CounterSuper.prototype.add = function () {
 }
 
 CounterSuper.prototype.red = function () {
-    if (this.options && this.options.initVal && this.options.initVal > 0) {
+    if (this.options && typeof this.options.initVal === 'number' && this.options.initVal > 0) {
         this.options.initVal -= 1
     }
     if (this.options && this.options.redOnCall) {
@@ -125,28 +125,32 @@ class CounterReact extends Component {
     constructor (props) {
         super(props)
         this.htmlString = this.props.template
-        this.initData = this.props.initData
+        this.options = this.props.context.options
         this.state = {
-            value: this.initData && this.initData.initVal ? this.initData.initVal : 0
+            value: this.options && this.options.initVal ? this.options.initVal : 0
         }
-    }
-    componentWillMount () {
-        /*const exa = this.props.template
-        this.htmlString = exa*/
     }
     addOnCall () {
+        this.props.context.add()
+        const val = this.props.context.getVal()
+        console.log('React child add-on-call:' + val)
         this.setState({
-            value: this.state.value += 1
+            // value: this.state.value += 1
+            value: val
         })
-        console.log('React child add-on-call:')
+        // this.props.context.options.addOnCall(this.state.value)
     }
     redOnCall () {
+        this.props.context.red()
+        const val = this.props.context.getVal()
+        console.log('React child red-on-call:' + val)
         if (this.state.value > 0) {
             this.setState({
-                value: this.state.value -= 1
+                // value: this.state.value -= 1
+                value: val
             })
         }
-        console.log('React child red-on-call:')
+        // this.props.context.options.redOnCall(this.state.value)
     }
     onChange (e) {
         this.setState({
