@@ -65,7 +65,7 @@ CounterSuper.prototype.createTem = function (doc) {
 
 CounterSuper.prototype.useReact = function () {
     const tem = this.createTem()
-    return <CounterReact template={tem} context={this} />
+    return <CounterReact template={tem} context={this} callback={(e) => this.update(e)}/>
 }
 
 CounterSuper.prototype.useVue = function () {
@@ -95,8 +95,8 @@ CounterSuper.prototype.red = function () {
     }
 }
 
-CounterSuper.prototype.update = function () {
-    if (this.options && this.options.doc) {
+CounterSuper.prototype.update = function (e) {
+    if (this.options && this.options.doc && !e) {
         const doc = this.options.doc
         const arr = doc.getElementsByTagName('*')
         const len = arr.length
@@ -109,6 +109,9 @@ CounterSuper.prototype.update = function () {
         }
         targetNode.value = this.options.initVal
         return this.options.initVal
+    }
+    if (e) {
+        console.log('eeeeee', e)
     }
 }
 
@@ -129,6 +132,9 @@ class CounterReact extends Component {
         this.state = {
             value: this.options && this.options.initVal ? this.options.initVal : 0
         }
+    }
+    componentDidMount () {
+        this.props.callback(this._counterreact)
     }
     componentWillUpdate (nextProps, nextState) {
         console.log('childNextProps:', nextProps, 'childNextState:', nextState)
@@ -157,6 +163,9 @@ class CounterReact extends Component {
             value: val
         })
     }
+    test () {
+        console.log('990909')
+    }
     render () {
         console.log('child update:')
         const that = this
@@ -175,7 +184,7 @@ class CounterReact extends Component {
                 }
             }
         })
-        return <div>{ tem }</div>
+        return <div ref={(c) => this._counterreact = c}>{ tem }</div>
     }
 }
 

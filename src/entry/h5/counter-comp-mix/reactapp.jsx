@@ -51,6 +51,9 @@ class Main extends Component {
         })
         this.element = this.exap.useReact()
     }
+    componentDidMount () {
+        // _counterreact.test().call(this.element)
+    }
     addOnCall (val) {
         console.log('React parent add-on-call:' + val)
     }
@@ -66,10 +69,10 @@ class Main extends Component {
     submit () {
         const val = this.exap.changeVal(this.parentNum)
         // this.element.forceUpdate()
-        // console.log('this.element:', this.element.props({data: '1'}))
-        this.setState({
+        console.log('this.element:', this.element)
+        /*this.setState({
             parentVal: val
-        })
+        })*/
        /* this.element.setState({
             value: this.exap.getVal()
         })*/
