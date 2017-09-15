@@ -30,7 +30,21 @@ $('#h5app').on('click', '.com-count-red', () => {
     h5Counter.red()
     h5Counter.update()
 })
-document.getElementById('h5app').innerHTML = `<p>The element below is DOM element</p>${h5Counter.createTem(document.getElementById('h5app'))}`
+$('#h5app').on('click', '.getval', () => {
+    console.log('实例里面的值:', h5Counter.getVal())
+})
+$('#h5app').on('click', '.changeval', () => {
+    const num = Math.ceil($('.changeinput').val())
+    h5Counter.changeVal(num)
+    console.log('改变后的实例值:' + h5Counter.getVal())
+    h5Counter.update()
+})
+document.getElementById('h5app').innerHTML = `
+    <p>The element below is DOM element</p>
+    ${h5Counter.createTem(document.getElementById('h5app'))}
+    <button class="getval" style="display: block">获取h5app实例里面的值</button>
+    <input type="text" class="changeinput" placeholder="从父组件改变子组件的值"><button class="changeval">提交</button>
+`
 /* react Demo */
 CounterCompReact()
 /* vue Demo */

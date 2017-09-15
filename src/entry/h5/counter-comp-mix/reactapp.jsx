@@ -8,8 +8,18 @@ class Main extends Component {
         this.element = ''
     }
     componentWillMount () {
-        const tem = new CounterComp()
+        const tem = new CounterComp({
+            initVal: 1,
+            addOnCall: this.addOnCall,
+            redOnCall: this.redOnCall
+        })
         this.element = tem.useReact()
+    }
+    addOnCall () {
+        console.log('React add-on-call:')
+    }
+    redOnCall () {
+        console.log('React red-on-call:')
     }
     render () {
         return (

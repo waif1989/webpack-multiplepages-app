@@ -55,16 +55,17 @@ CounterSuper.prototype.createTem = function (doc) {
     }
     const template = `
         <div class="com-count-container" style="${toStyleString(this.style.container)}">
-            <button class="com-count-add" style="${toStyleString(this.style.btn)}">+</button>
+            <button class="com-count-add" data-countaddbtn="countaddbtn" style="${toStyleString(this.style.btn)}">+</button>
             <input class="com-count-input" data-countinput="countinput" style="${toStyleString(this.style.input)}" type="number" value="${this.options && this.options.initVal ? this.options.initVal : 0}">
-            <button class="com-count-red" style="${toStyleString(this.style.btn)}">-</button>
+            <button class="com-count-red" data-countredbtn="countredbtn" style="${toStyleString(this.style.btn)}">-</button>
         </div>
     `
     return template
 }
 
 CounterSuper.prototype.useReact = function () {
-    return <CounterReact />
+    const tem = this.createTem()
+    return <CounterReact initData={this.options} template={tem} context={this} />
 }
 
 CounterSuper.prototype.useVue = function () {
@@ -107,6 +108,7 @@ CounterSuper.prototype.update = function () {
             }
         }
         targetNode.value = this.options.initVal
+        return this.options.initVal
     }
 }
 
@@ -114,23 +116,58 @@ CounterSuper.prototype.getVal = function () {
     return this.options.initVal
 }
 
+CounterSuper.prototype.changeVal = function (val) {
+    this.options.initVal = val
+    return this.options.initVal
+}
+
 class CounterReact extends Component {
     constructor (props) {
         super(props)
-        this.htmlString = ''
+        this.htmlString = this.props.template
+        this.initData = this.props.initData
+        this.state = {
+            value: this.initData && this.initData.initVal ? this.initData.initVal : 0
+        }
     }
     componentWillMount () {
-        this.htmlString = this.newTemplate()
+        /*const exa = this.props.template
+        this.htmlString = exa*/
     }
-    newTemplate () {
-        const template = new CounterSub()
-        return template.createTem()
+    addOnCall () {
+        this.setState({
+            value: this.state.value += 1
+        })
+        console.log('React child add-on-call:')
+    }
+    redOnCall () {
+        if (this.state.value > 0) {
+            this.setState({
+                value: this.state.value -= 1
+            })
+        }
+        console.log('React child red-on-call:')
+    }
+    onChange (e) {
+        this.setState({
+            value: Number(e.target.value)
+        })
     }
     render () {
+        const that = this
         const tem = ReactHtmlParser(this.htmlString, {
             decodeEntities: true,
             transform (node, index) {
-
+                if (!node.attribs) return
+                if (node.attribs['data-countaddbtn'] === 'countaddbtn') {
+                    return <button key={'countaddbtn'} className={'com-count-add'} style={that.props.context.style.btn} onClick={(e) => that.addOnCall(e)}>+</button>
+                }
+                if (node.attribs['data-countredbtn'] === 'countredbtn') {
+                    return <button key={'countredbtn'} className={'com-count-red'} style={that.props.context.style.btn} onClick={(e) => that.redOnCall(e)}>-</button>
+                }
+                if (node.attribs['data-countinput'] === 'countinput') {
+                    return <input key={'countinput'} className={'com-count-input'} style={that.props.context.style.input} type="number" value={that.state.value} onChange={(e) => that.onChange(e)} />
+                }
             }
         })
         return <div>{ tem }</div>
