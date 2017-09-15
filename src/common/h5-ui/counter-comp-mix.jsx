@@ -130,15 +130,16 @@ class CounterReact extends Component {
             value: this.options && this.options.initVal ? this.options.initVal : 0
         }
     }
+    componentWillUpdate (nextProps, nextState) {
+        console.log('childNextProps:', nextProps, 'childNextState:', nextState)
+    }
     addOnCall () {
         this.props.context.add()
         const val = this.props.context.getVal()
         console.log('React child add-on-call:' + val)
         this.setState({
-            // value: this.state.value += 1
             value: val
         })
-        // this.props.context.options.addOnCall(this.state.value)
     }
     redOnCall () {
         this.props.context.red()
@@ -146,18 +147,18 @@ class CounterReact extends Component {
         console.log('React child red-on-call:' + val)
         if (this.state.value > 0) {
             this.setState({
-                // value: this.state.value -= 1
                 value: val
             })
         }
-        // this.props.context.options.redOnCall(this.state.value)
     }
     onChange (e) {
+        const val = this.props.context.changeVal(Number(e.target.value))
         this.setState({
-            value: Number(e.target.value)
+            value: val
         })
     }
     render () {
+        console.log('child update:')
         const that = this
         const tem = ReactHtmlParser(this.htmlString, {
             decodeEntities: true,
