@@ -51,8 +51,12 @@ class Main extends Component {
         })
         this.element = this.exap.useReact()
     }
-    componentDidMount () {
-        // _counterreact.test().call(this.element)
+    shouldComponentUpdate (nextProps, nextState) {
+        const val = this.exap.changeVal(Number(nextState.parentVal))
+        this.exap.getInstances.setState({
+            value: val
+        })
+        return false
     }
     addOnCall (val) {
         console.log('React parent add-on-call:' + val)
@@ -67,23 +71,16 @@ class Main extends Component {
         this.parentNum = Number(e.target.value)
     }
     submit () {
-        const val = this.exap.changeVal(this.parentNum)
-        // this.element.forceUpdate()
-        console.log('this.element:', this.element)
-        /*this.setState({
-            parentVal: val
-        })*/
-       /* this.element.setState({
-            value: this.exap.getVal()
-        })*/
+        this.setState({
+            parentVal: this.parentNum
+        })
     }
     render () {
-        console.log('parent update:', this.element)
+        console.log('parent update:')
         return (
             <div>
                <p>The element below is react component</p>
                 {this.element}
-                {/*<Child val={this.state.parentVal} />*/}
                 <button className={'getval'} style={{display: 'block'}} onClick={(e) => this.getVal(e)}>获取reactapp实例里面的值</button>
                 <input type="text" className={'changeinput'} placeholder="从父组件改变子组件的值" onChange={(e) => this.onChange(e)} /><button className={'changeval'} onClick={(e) => this.submit(e)}>提交</button>
             </div>
