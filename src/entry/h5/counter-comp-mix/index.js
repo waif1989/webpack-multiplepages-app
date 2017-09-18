@@ -31,7 +31,7 @@ $('#h5app').on('click', '.com-count-red', () => {
     h5Counter.update()
 })
 $('#h5app').on('click', '.getval', () => {
-    console.log('实例里面的值:', h5Counter.getVal())
+    console.log('Dom实例里面的值:', h5Counter.getVal())
 })
 $('#h5app').on('click', '.changeval', () => {
     const num = Math.ceil($('.changeinput').val())

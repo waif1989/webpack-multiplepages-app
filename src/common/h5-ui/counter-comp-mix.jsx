@@ -55,9 +55,9 @@ CounterSuper.prototype.createTem = function (doc) {
     }
     const template = `
         <div class="com-count-container" style="${toStyleString(this.style.container)}">
-            <button class="com-count-add" data-countaddbtn="countaddbtn" style="${toStyleString(this.style.btn)}">+</button>
-            <input class="com-count-input" data-countinput="countinput" style="${toStyleString(this.style.input)}" type="number" value="${this.options && this.options.initVal ? this.options.initVal : 0}">
-            <button class="com-count-red" data-countredbtn="countredbtn" style="${toStyleString(this.style.btn)}">-</button>
+            <button class="com-count-add" data-countaddbtn="countaddbtn" data-on-click="add" style="${toStyleString(this.style.btn)}">+</button>
+            <input class="com-count-input" data-countinput="countinput" data-v-model="countinput" style="${toStyleString(this.style.input)}" type="number" value="${this.options && this.options.initVal ? this.options.initVal : 0}">
+            <button class="com-count-red" data-countredbtn="countredbtn" data-on-click="red" style="${toStyleString(this.style.btn)}">-</button>
         </div>
     `
     return template
@@ -69,10 +69,38 @@ CounterSuper.prototype.useReact = function () {
 }
 
 CounterSuper.prototype.useVue = function () {
+    const that = this
     const el = this.createTem()
     const tem = adaptToVueAttr(el)
     const vueComp = {
-        template: tem
+        props: ['parentVal'],
+        template: tem,
+        data () {
+          return {
+              countinput: that.options && typeof that.options.initVal === 'number' ? that.options.initVal : 0
+          }
+        },
+        methods: {
+            add () {
+                that.add()
+                const val = that.getVal()
+                console.log('Vue child add-on-call:', val)
+                this.$emit('addOnCall', val)
+                this.countinput = val
+            },
+            red () {
+                that.red()
+                const val = that.getVal()
+                console.log('Vue child red-on-call:', val)
+                this.$emit('redOnCall', val)
+                this.countinput = val
+            }
+        },
+        watch: {
+            parentVal () {
+                this.countinput = this.parentVal
+            }
+        }
     }
     return vueComp
 }
@@ -95,8 +123,8 @@ CounterSuper.prototype.red = function () {
     }
 }
 
-CounterSuper.prototype.update = function (e) {
-    if (this.options && this.options.doc && !e) {
+CounterSuper.prototype.update = function () {
+    if (this.options && this.options.doc) {
         const doc = this.options.doc
         const arr = doc.getElementsByTagName('*')
         const len = arr.length
@@ -110,9 +138,6 @@ CounterSuper.prototype.update = function (e) {
         targetNode.value = this.options.initVal
         return this.options.initVal
     }
-    if (e) {
-        console.log('CounterSuper.prototype.update', e)
-    }
 }
 
 CounterSuper.prototype.getVal = function () {
@@ -120,7 +145,7 @@ CounterSuper.prototype.getVal = function () {
 }
 
 CounterSuper.prototype.changeVal = function (val) {
-    this.options.initVal = val
+    this.options.initVal = Number(val)
     return this.options.initVal
 }
 
