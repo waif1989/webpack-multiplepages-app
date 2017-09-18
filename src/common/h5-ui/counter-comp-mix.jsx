@@ -99,6 +99,7 @@ CounterSuper.prototype.useVue = function () {
         watch: {
             parentVal () {
                 this.countinput = this.parentVal
+                that.changeVal(this.parentVal)
             }
         }
     }

@@ -40,7 +40,7 @@
             },
             submit () {
                 this.parentVal = this.parentNum
-                counterComp.changeVal(this.parentVal)
+                // counterComp.changeVal(this.parentVal)
             },
             getVal () {
                 console.log('Vue实例里面的值:', counterComp.getVal())
