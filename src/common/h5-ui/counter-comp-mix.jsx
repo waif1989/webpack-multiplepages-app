@@ -73,7 +73,6 @@ CounterSuper.prototype.useVue = function () {
     const el = this.createTem()
     const tem = adaptToVueAttr(el)
     const vueComp = {
-        props: ['parentVal'],
         template: tem,
         data () {
           return {
@@ -94,12 +93,14 @@ CounterSuper.prototype.useVue = function () {
                 console.log('Vue child red-on-call:', val)
                 this.$emit('redOnCall', val)
                 this.countinput = val
-            }
-        },
-        watch: {
-            parentVal () {
-                this.countinput = this.parentVal
-                that.changeVal(this.parentVal)
+            },
+            changeVal (val) {
+                const value = Number(val)
+                this.countinput = value
+                that.changeVal(value)
+            },
+            getVal () {
+                return that.getVal()
             }
         }
     }
