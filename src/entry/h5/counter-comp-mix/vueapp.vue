@@ -1,7 +1,7 @@
 <template>
     <div>
         <p>The element below is vue component</p>
-        <counter @addOnCall="addOnCall" @redOnCall="redOnCall" :parentVal="parentVal"></counter>
+        <component :is="counter" :parentVal="parentVal"></component>
         <button class="getval" style="display: block" @click="getVal">获取vueapp实例里面的值</button>
         <input type="text" class="changeinput" v-model="parentNum" placeholder="从父组件改变子组件的值"><button class="changeval" @click="submit">提交</button>
     </div>
@@ -13,20 +13,17 @@
 
 <script>
     import CounterComp from '../../../common/h5-ui/counter-comp-mix.jsx'
-   /* function addOnCall (val) {
-        console.log('Vue parent add-on-call:', val)
-    }
-    function redOnCall (val) {
-        console.log('Vue parent red-on-call:', val)
-    }*/
-    const counterComp = new CounterComp({
-        initVal: 1
-    })
-    const counter = counterComp.useVue()
     export default {
         data () {
+            const counterComp = new CounterComp({
+                initVal: 1,
+                addOnCall: this.addOnCall,
+                redOnCall: this.redOnCall
+            })
+            const counter = counterComp.useVue()
             return {
-                // instrance: counter,
+                counterComp: counterComp,
+                counter: counter,
                 parentVal: 0,
                 parentNum: ''
             }
@@ -40,17 +37,16 @@
             },
             submit () {
                 this.parentVal = this.parentNum
-                // counterComp.changeVal(this.parentVal)
             },
             getVal () {
-                console.log('Vue实例里面的值:', counterComp.getVal())
+                console.log('Vue实例里面的值:', this.counterComp.getVal())
             }
         },
-        components: {
-            'counter': counter
-        },
         created () {
-            // console.log('instrance:', this.instrance)
+
+        },
+        mounted () {
+            this.counterComp.getInstances = this
         }
     }
 </script>
