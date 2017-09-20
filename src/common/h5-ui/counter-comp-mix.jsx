@@ -31,13 +31,6 @@ function CounterSuper (options) {
         }
     }
     this.options = options
-    let privateNum = options && typeof options.initVal === 'number' ? options.initVal : 0
-    this.getValue = function () {
-        return privateNum
-    }
-    this.setValue = function (val) {
-        privateNum = val
-    }
 }
 
 /**
@@ -46,6 +39,13 @@ function CounterSuper (options) {
  */
 function CounterSub (options) {
     /* @param options {Object} */
+    let privateNum = options && typeof options.initVal === 'number' ? options.initVal : 0
+    this._getValue = function () {
+        return privateNum
+    }
+    this._setValue = function (val) {
+        privateNum = val
+    }
     CounterSuper.call(this, options)
 }
 
@@ -54,7 +54,7 @@ inheritPrototype(CounterSub, CounterSuper)
 export default CounterSub
 
 CounterSuper.prototype.createTem = function (doc) {
-    const num = this.getValue()
+    const num = this._getValue()
     if (this.options && doc) {
         this.options.doc = doc
         regListener.addEleList(doc, 'keyup', _keyup, this, false)
@@ -75,7 +75,7 @@ CounterSuper.prototype.useReact = function () {
 }
 
 CounterSuper.prototype.useVue = function () {
-    const num = this.getValue()
+    const num = this._getValue()
     const that = this
     const el = this.createTem()
     const tem = adaptToVueAttr(el)
@@ -115,33 +115,21 @@ CounterSuper.prototype.useVue = function () {
 }
 
 CounterSuper.prototype.add = function () {
-    /*if (this.options && typeof this.options.initVal === 'number') {
-        this.options.initVal += 1
-    }
-    if (this.options && this.options.addOnCall) {
-        this.options.addOnCall(this.options.initVal)
-    }*/
-    let num = this.getValue()
+    let num = this._getValue()
     num += 1
-    this.setValue(num)
+    this._setValue(num)
     if (this.options && this.options.addOnCall) {
-        this.options.addOnCall(this.getValue())
+        this.options.addOnCall(this._getValue())
     }
 }
 
 CounterSuper.prototype.red = function () {
-    /*if (this.options && typeof this.options.initVal === 'number' && this.options.initVal > 0) {
-        this.options.initVal -= 1
-    }
-    if (this.options && this.options.redOnCall) {
-        this.options.redOnCall(this.options.initVal)
-    }*/
-    let num = this.getValue()
+    let num = this._getValue()
     if (num > 0) {
         num -= 1
-        this.setValue(num)
+        this._setValue(num)
         if (this.options && this.options.addOnCall) {
-            this.options.addOnCall(this.getValue())
+            this.options.addOnCall(this._getValue())
         }
     }
 }
@@ -158,26 +146,22 @@ CounterSuper.prototype.update = function () {
                 break
             }
         }
-        /*targetNode.value = this.options.initVal
-        return this.options.initVal*/
-        targetNode.value = this.getValue()
+        targetNode.value = this._getValue()
     }
 }
 
 CounterSuper.prototype.getVal = function () {
-    return this.getValue()
+    return this._getValue()
 }
 
 CounterSuper.prototype.changeVal = function (val) {
-    /*this.options.initVal = Number(val)
-    return this.options.initVal*/
-    this.setValue(Number(val))
+    this._setValue(Number(val))
 }
 
 class CounterReact extends Component {
     constructor (props) {
         super(props)
-        const num = this.props.context.getValue()
+        const num = this.props.context._getValue()
         this.htmlString = this.props.template
         this.options = this.props.context.options
         this.state = {
@@ -236,5 +220,5 @@ class CounterReact extends Component {
 function _keyup (event) {
     var e = event || window.event
     var target = e.target || e.srcElement
-    this.options.initVal = target.value
+    this._setValue(target.value)
 }

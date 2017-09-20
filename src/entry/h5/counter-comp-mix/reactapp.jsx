@@ -2,37 +2,6 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import CounterComp from '../../../common/h5-ui/counter-comp-mix.jsx'
 
-/*class Child extends Component {
-    constructor (props) {
-        super(props)
-        this.exap = null
-        this.element = ''
-    }
-    componentWillMount () {
-        this.exap = new CounterComp({
-            initVal: 1,
-            addOnCall: this.addOnCall,
-            redOnCall: this.redOnCall
-        })
-        this.element = this.exap.useReact()
-    }
-    componentWillUpdate (nextProps, nextState) {
-        console.log('childNextProps:', nextProps, 'childNextState:', nextState)
-    }
-    addOnCall (val) {
-        console.log('React child-middle add-on-call:' + val)
-    }
-    redOnCall (val) {
-        console.log('React child-middle red-on-call:' + val)
-    }
-    render () {
-        console.log('c update')
-        return (
-            <div>{this.element}</div>
-        )
-    }
-}*/
-
 class Main extends Component {
     constructor (props) {
         super(props)
@@ -53,7 +22,7 @@ class Main extends Component {
     }
     shouldComponentUpdate (nextProps, nextState) {
         this.exap.changeVal(Number(nextState.parentVal))
-        const val = this.exap.getValue()
+        const val = this.exap.getVal()
             this.exap.getInstances.setState({
             value: val
         })
