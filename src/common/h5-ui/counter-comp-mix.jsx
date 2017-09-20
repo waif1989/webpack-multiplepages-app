@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { render } from 'react-dom'
-import ReactDOMServer from 'react-dom/server'
 import ReactHtmlParser from 'react-html-parser'
 import inheritPrototype from '../../utils/parasitic-inheritance'
 import { adaptToVueAttr } from '../../utils/dataattr-adapt-vue'
