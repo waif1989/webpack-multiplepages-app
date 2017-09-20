@@ -52,8 +52,9 @@ class Main extends Component {
         this.element = this.exap.useReact()
     }
     shouldComponentUpdate (nextProps, nextState) {
-        const val = this.exap.changeVal(Number(nextState.parentVal))
-        this.exap.getInstances.setState({
+        this.exap.changeVal(Number(nextState.parentVal))
+        const val = this.exap.getValue()
+            this.exap.getInstances.setState({
             value: val
         })
         return false

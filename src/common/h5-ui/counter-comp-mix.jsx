@@ -31,6 +31,13 @@ function CounterSuper (options) {
         }
     }
     this.options = options
+    let privateNum = options && typeof options.initVal === 'number' ? options.initVal : 0
+    this.getValue = function () {
+        return privateNum
+    }
+    this.setValue = function (val) {
+        privateNum = val
+    }
 }
 
 /**
@@ -47,6 +54,7 @@ inheritPrototype(CounterSub, CounterSuper)
 export default CounterSub
 
 CounterSuper.prototype.createTem = function (doc) {
+    const num = this.getValue()
     if (this.options && doc) {
         this.options.doc = doc
         regListener.addEleList(doc, 'keyup', _keyup, this, false)
@@ -54,7 +62,7 @@ CounterSuper.prototype.createTem = function (doc) {
     const template = `
         <div class="com-count-container" style="${toStyleString(this.style.container)}">
             <button class="com-count-add" data-countaddbtn="countaddbtn" data-on-click="add" style="${toStyleString(this.style.btn)}">+</button>
-            <input class="com-count-input" data-countinput="countinput" data-v-model="countinput" style="${toStyleString(this.style.input)}" type="number" value="${this.options && this.options.initVal ? this.options.initVal : 0}">
+            <input class="com-count-input" data-countinput="countinput" data-v-model="countinput" style="${toStyleString(this.style.input)}" type="number" value="${num}">
             <button class="com-count-red" data-countredbtn="countredbtn" data-on-click="red" style="${toStyleString(this.style.btn)}">-</button>
         </div>
     `
@@ -67,6 +75,7 @@ CounterSuper.prototype.useReact = function () {
 }
 
 CounterSuper.prototype.useVue = function () {
+    const num = this.getValue()
     const that = this
     const el = this.createTem()
     const tem = adaptToVueAttr(el)
@@ -74,7 +83,7 @@ CounterSuper.prototype.useVue = function () {
         template: tem,
         data () {
           return {
-              countinput: that.options && typeof that.options.initVal === 'number' ? that.options.initVal : 0
+              countinput: num
           }
         },
         methods: {
@@ -106,20 +115,34 @@ CounterSuper.prototype.useVue = function () {
 }
 
 CounterSuper.prototype.add = function () {
-    if (this.options && typeof this.options.initVal === 'number') {
+    /*if (this.options && typeof this.options.initVal === 'number') {
         this.options.initVal += 1
     }
     if (this.options && this.options.addOnCall) {
         this.options.addOnCall(this.options.initVal)
+    }*/
+    let num = this.getValue()
+    num += 1
+    this.setValue(num)
+    if (this.options && this.options.addOnCall) {
+        this.options.addOnCall(this.getValue())
     }
 }
 
 CounterSuper.prototype.red = function () {
-    if (this.options && typeof this.options.initVal === 'number' && this.options.initVal > 0) {
+    /*if (this.options && typeof this.options.initVal === 'number' && this.options.initVal > 0) {
         this.options.initVal -= 1
     }
     if (this.options && this.options.redOnCall) {
         this.options.redOnCall(this.options.initVal)
+    }*/
+    let num = this.getValue()
+    if (num > 0) {
+        num -= 1
+        this.setValue(num)
+        if (this.options && this.options.addOnCall) {
+            this.options.addOnCall(this.getValue())
+        }
     }
 }
 
@@ -135,27 +158,30 @@ CounterSuper.prototype.update = function () {
                 break
             }
         }
-        targetNode.value = this.options.initVal
-        return this.options.initVal
+        /*targetNode.value = this.options.initVal
+        return this.options.initVal*/
+        targetNode.value = this.getValue()
     }
 }
 
 CounterSuper.prototype.getVal = function () {
-    return this.options.initVal
+    return this.getValue()
 }
 
 CounterSuper.prototype.changeVal = function (val) {
-    this.options.initVal = Number(val)
-    return this.options.initVal
+    /*this.options.initVal = Number(val)
+    return this.options.initVal*/
+    this.setValue(Number(val))
 }
 
 class CounterReact extends Component {
     constructor (props) {
         super(props)
+        const num = this.props.context.getValue()
         this.htmlString = this.props.template
         this.options = this.props.context.options
         this.state = {
-            value: this.options && typeof this.options.initVal === 'number' ? this.options.initVal : 0
+            value: num
         }
     }
     componentDidMount () {
